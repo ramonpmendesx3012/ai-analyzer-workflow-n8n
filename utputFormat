@@ -1,0 +1,7 @@
+HTTP/1.1 422 Unprocessable Entity
+date: Sun, 14 Dec 2025 22:18:43 GMT
+server: uvicorn
+content-length: 158
+content-type: application/json
+
+{"detail":[{"type":"json_invalid","loc":["body",1],"msg":"JSON decode error","input":{},"ctx":{"error":"Expecting property name enclosed in double quotes"}}]}

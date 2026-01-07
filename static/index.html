@@ -1,0 +1,3088 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>⚡ N8N Workflow Documentation</title>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10.6.1/dist/mermaid.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <style>
+    /* Modern CSS Reset and Base */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --primary: #3b82f6;
+      --primary-dark: #2563eb;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --error: #ef4444;
+      --bg: #ffffff;
+      --bg-secondary: #f8fafc;
+      --bg-tertiary: #f1f5f9;
+      --text: #1e293b;
+      --text-secondary: #64748b;
+      --text-muted: #94a3b8;
+      --text-modal: #4a5568;
+      --border: #e2e8f0;
+      --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+      --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+    }
+
+    [data-theme="dark"] {
+      --bg: #0f172a;
+      --bg-secondary: #1e293b;
+      --bg-tertiary: #334155;
+      --text: #f8fafc;
+      --text-secondary: #cbd5e1;
+      --text-muted: #64748b;
+      --border: #475569;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      transition: all 0.2s ease;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 1rem;
+    }
+
+    /* Header */
+    .header {
+      background: var(--bg-secondary);
+      border-bottom: 1px solid var(--border);
+      padding: 2rem 0;
+      text-align: center;
+    }
+    
+    .header-content {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .title {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      color: var(--primary);
+    }
+
+    .subtitle {
+      font-size: 1.125rem;
+      color: var(--text-secondary);
+      margin-bottom: 2rem;
+    }
+
+    /* AI Analyzer Button */
+    .ai-analyzer-btn {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 48px; /* Match typical title height or specific value */
+      display: flex;
+      align-items: center;
+      margin-top: 4px; /* Slight adjustment to align with title text baseline */
+      background: linear-gradient(135deg, #6366f1, #8b5cf6);
+      color: white;
+      border: none;
+      padding: 0 1.5rem;
+      border-radius: 0.5rem;
+      font-weight: 600;
+      cursor: pointer;
+      gap: 0.5rem;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      transition: all 0.2s ease;
+      z-index: 50;
+    }
+
+    .ai-analyzer-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    }
+
+    .stats {
+      display: flex;
+      gap: 2rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .stat {
+      text-align: center;
+      min-width: 100px;
+    }
+
+    .stat-number {
+      display: block;
+      font-size: 1.875rem;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    .stat-label {
+      font-size: 0.875rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    /* Controls */
+    .controls {
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
+      padding: 1.5rem 0;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .search-section {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .search-input {
+      flex: 1;
+      padding: 0.75rem 1rem;
+      border: 1px solid var(--border);
+      border-radius: 0.5rem;
+      background: var(--bg);
+      color: var(--text);
+      font-size: 1rem;
+      min-width: 300px;
+    }
+
+    .search-input:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgb(59 130 246 / 0.1);
+    }
+
+    .filter-section {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .filter-group {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .filter-group label {
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+    }
+
+    .filter-group select {
+      padding: 0.5rem;
+      border: 1px solid var(--border);
+      border-radius: 0.375rem;
+      background: var(--bg);
+      color: var(--text);
+      font-size: 0.875rem;
+    }
+
+    .theme-toggle {
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border);
+      border-radius: 0.5rem;
+      padding: 0.5rem 1rem;
+      cursor: pointer;
+      font-size: 1rem;
+      margin-left: auto;
+    }
+
+    .results-info {
+      margin-top: 1rem;
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+    }
+
+    /* Main Content */
+    .main {
+      padding: 2rem 0;
+    }
+
+    /* States */
+    .state {
+      text-align: center;
+      padding: 4rem 2rem;
+    }
+
+    .state .icon {
+      font-size: 4rem;
+      margin-bottom: 1rem;
+    }
+
+    .state h3 {
+      font-size: 1.5rem;
+      margin-bottom: 0.5rem;
+      color: var(--text);
+    }
+
+    .state p {
+      color: var(--text-secondary);
+      margin-bottom: 2rem;
+    }
+
+    .retry-btn {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      font-size: 1rem;
+      font-weight: 500;
+    }
+
+    .retry-btn:hover {
+      background: var(--primary-dark);
+    }
+
+    /* Workflow Grid */
+    .workflow-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .workflow-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 0.75rem;
+      padding: 1.5rem;
+      box-shadow: var(--shadow);
+      transition: all 0.2s ease;
+      cursor: pointer;
+      position: relative;
+    }
+
+    .workflow-card:hover {
+      box-shadow: var(--shadow-lg);
+      border-color: var(--primary);
+      transform: translateY(-2px);
+    }
+
+    .workflow-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1rem;
+    }
+
+    .workflow-meta {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+    }
+
+    .status-active {
+      background: var(--success);
+    }
+
+    .status-inactive {
+      background: var(--text-muted);
+    }
+
+    .complexity-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+    }
+
+    .complexity-low {
+      background: var(--success);
+    }
+
+    .complexity-medium {
+      background: var(--warning);
+    }
+
+    .complexity-high {
+      background: var(--error);
+    }
+
+    .trigger-badge {
+      background: var(--primary);
+      color: white;
+      padding: 0.25rem 0.5rem;
+      border-radius: 0.375rem;
+      font-size: 0.75rem;
+      font-weight: 500;
+    }
+
+    .category-badge {
+      background: var(--bg-tertiary);
+      color: var(--text-secondary);
+      padding: 0.125rem 0.375rem;
+      border-radius: 0.25rem;
+      font-size: 0.75rem;
+      border: 1px solid var(--border);
+      font-weight: 500;
+    }
+
+    .workflow-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      color: var(--text);
+      line-height: 1.4;
+    }
+
+    .workflow-description {
+      color: var(--text-secondary);
+      margin-bottom: 1rem;
+      line-height: 1.5;
+    }
+
+    .workflow-integrations {
+      margin-top: 1rem;
+    }
+
+    .integrations-title {
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+      margin-bottom: 0.5rem;
+    }
+
+    .integrations-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.25rem;
+    }
+
+    .integration-tag {
+      background: var(--bg-tertiary);
+      color: var(--text-secondary);
+      padding: 0.125rem 0.5rem;
+      border-radius: 0.25rem;
+      font-size: 0.75rem;
+      border: 1px solid var(--border);
+    }
+
+    .workflow-actions {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 1rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .action-btn {
+      padding: 0.5rem 1rem;
+      border: 1px solid var(--border);
+      border-radius: 0.375rem;
+      background: var(--bg);
+      color: var(--text);
+      text-decoration: none;
+      font-size: 0.875rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .action-btn:hover {
+      background: var(--bg-tertiary);
+      border-color: var(--primary);
+    }
+
+    .action-btn.primary {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+    }
+
+    .action-btn.primary:hover {
+      background: var(--primary-dark);
+    }
+
+    .analyzer-btn {
+      padding: 0.5rem 0.25rem !important;
+      font-size: 0.75rem !important;
+      flex: 1;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.25rem;
+    }
+
+    /* Load More */
+    .load-more {
+      text-align: center;
+      margin-top: 2rem;
+    }
+
+    .load-more-btn {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 0.75rem 2rem;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      font-size: 1rem;
+      font-weight: 500;
+    }
+
+    .load-more-btn:hover {
+      background: var(--primary-dark);
+    }
+
+    /* Modal */
+    .modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      padding: 1rem;
+    }
+
+    .modal-overlay {
+      color: var(--text-modal);
+    }
+
+    .modal-content {
+      background: var(--bg);
+      border-radius: 0.75rem;
+      max-width: 800px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+      position: relative;
+    }
+
+    .modal-header {
+      padding: 1.5rem;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--bg);
+    }
+
+    /* AI Analyzer Specific Transitions */
+    #analyzerJson {
+      width: 100%;
+      min-height: 80px;
+      resize: vertical;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      overflow: hidden;
+    }
+
+    #analyzerJson.collapsed {
+      min-height: 0 !important;
+      height: 0 !important;
+      padding: 0 !important;
+      margin: 0 !important;
+      border: none !important;
+      opacity: 0;
+    }
+
+    #analyzerPasteLabel {
+      transition: all 0.3s ease;
+      opacity: 1;
+      max-height: 24px;
+      display: block;
+      overflow: hidden;
+    }
+
+    #analyzerPasteLabel.collapsed {
+      opacity: 0;
+      max-height: 0;
+      margin: 0 !important;
+    }
+
+    /* Loading Animation */
+    @keyframes pulse-ring {
+      0% {
+        transform: scale(1);
+        opacity: 0.6;
+      }
+      50% {
+        transform: scale(1.35);
+        opacity: 1;
+      }
+      100% {
+        transform: scale(1);
+        opacity: 0.6;
+      }
+    }
+
+    .pulse-icon {
+      animation: pulse-ring 1.5s ease-in-out infinite;
+      display: inline-block;
+    }
+
+    .modal-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+    }
+
+    .modal-close {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      padding: 0.25rem;
+      color: var(--text-secondary);
+    }
+
+    .action-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed !important;
+      filter: grayscale(0.8);
+      pointer-events: none; /* Ensure it's not clickable even if JS fails */
+    }
+
+    /* Tooltip container for disabled buttons */
+    .disabled-tooltip-wrapper {
+        display: inline-block;
+        position: relative;
+        flex: 1;
+    }
+    
+    .disabled-tooltip-wrapper .action-btn:disabled {
+        pointer-events: auto; /* Re-enable pointer events for tooltip hover */
+        width: 100%;
+    }
+
+    .action-btn:disabled:hover::after {
+        /* This content will be populated by title, but we can style it if needed. 
+           However, native title attribute is often better. 
+           Let's rely on title for now as per request. */
+    }
+
+    .modal-body {
+      padding: 1.5rem;
+    }
+
+    .workflow-detail {
+      margin-bottom: 1rem;
+    }
+
+    .workflow-detail h4 {
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.5rem;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 0.5rem;
+    }
+
+    .copy-btn {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 0.25rem 0.5rem;
+      border-radius: 0.25rem;
+      font-size: 0.75rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+
+    .copy-btn:hover {
+      background: var(--primary-dark);
+    }
+
+    .copy-btn.copied {
+      background: var(--success);
+    }
+
+    .copy-btn.copied:hover {
+      background: var(--success);
+    }
+
+    .json-viewer {
+      background: var(--bg-secondary);
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: 0.5rem;
+      padding: 1rem;
+      font-family: 'Courier New', monospace;
+      font-size: 0.875rem;
+      overflow-x: auto;
+      max-height: 400px;
+      white-space: pre-wrap;
+    }
+
+    /* Analysis Content Formatting */
+    #analysisContent h1,
+    #analysisContent h2,
+    #analysisContent h3 {
+      margin-top: 1.5rem;
+      margin-bottom: 1rem;
+      color: var(--text);
+      line-height: 1.4;
+    }
+
+    #analysisContent h1:first-child,
+    #analysisContent h2:first-child,
+    #analysisContent h3:first-child {
+      margin-top: 0;
+    }
+
+    #analysisContent p {
+      margin-bottom: 1rem;
+      color: var(--text);
+    }
+
+    #analysisContent ul, 
+    #analysisContent ol {
+      margin-bottom: 1rem;
+      padding-left: 1.5rem;
+      color: var(--text);
+    }
+
+    #analysisContent li {
+      margin-bottom: 0.5rem;
+    }
+
+    #analysisContent strong {
+      color: var(--primary);
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    /* Mermaid diagram styling */
+    .mermaid {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 0.5rem;
+      padding: 1rem;
+      text-align: center;
+      overflow: visible;
+      min-height: 300px;
+    }
+
+    .mermaid svg {
+      max-width: none;
+      height: auto;
+      transition: transform 0.2s ease;
+    }
+
+    .diagram-container {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 0.5rem;
+      padding: 1rem;
+      text-align: center;
+      overflow: hidden;
+      height: 500px;
+      position: relative;
+      cursor: grab;
+      user-select: none;
+    }
+
+    .diagram-container.dragging {
+      cursor: grabbing;
+    }
+
+    .diagram-container .mermaid {
+      border: none;
+      background: transparent;
+      padding: 0;
+    }
+
+    .diagram-controls {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .zoom-btn {
+      background: var(--bg-tertiary);
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: 0.25rem;
+      padding: 0.25rem 0.5rem;
+      font-size: 0.75rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+      min-width: 32px;
+      height: 32px;
+      justify-content: center;
+    }
+
+    .zoom-btn:hover {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+    }
+
+    .zoom-btn:active {
+      transform: scale(0.95);
+    }
+
+    .zoom-info {
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      margin-left: 0.5rem;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .title {
+        font-size: 2rem;
+      }
+
+      .stats {
+        gap: 1rem;
+      }
+
+      .search-section,
+      .filter-section {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .search-input {
+        min-width: auto;
+      }
+
+      .theme-toggle {
+        margin-left: 0;
+        align-self: flex-start;
+      }
+
+      .workflow-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .workflow-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+      }
+    }
+    /* Analyzer Modal Layout Fixes */
+    .file-input-wrapper {
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+      width: 100%;
+      flex-wrap: nowrap !important; /* Force single line */
+    }
+
+    .file-chosen-text {
+      flex: 1;
+      min-width: 0; /* Allow shrinking */
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      color: var(--text-secondary);
+      font-size: 0.875rem;
+      /* Intelligent truncation: limit to approx middle of page/container */
+      max-width: 50%; 
+    }
+
+    .language-selection {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex-shrink: 0; /* Prevent shrinking */
+    }
+
+    .language-label {
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+      white-space: nowrap;
+    }
+
+    .language-select {
+       width: auto;
+       padding: 0.25rem 2rem 0.25rem 0.5rem;
+       height: 32px;
+       font-size: 0.875rem;
+       background-position: right 0.5rem center;
+       max-width: 180px; /* Prevent overly long language names from breaking layout */
+       text-overflow: ellipsis;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 600px) {
+        .file-input-wrapper {
+            flex-wrap: wrap !important;
+        }
+        /* .file-chosen-text styles removed as it is now in a separate container */
+    }
+  </style>
+</head>
+
+<body>
+  <div id="app">
+    <!-- Header -->
+    <header class="header">
+      <div class="container" style="position: relative;">
+        <div class="header-content">
+            <h1 class="title">⚡ N8N Workflow Documentation</h1>
+            <button onclick="workflowApp.openAnalyzerModal()" class="ai-analyzer-btn">
+              🧠 AI Analyzer
+            </button>
+        </div>
+        <p class="subtitle">Lightning-fast workflow browser with instant search</p>
+        <div class="stats">
+          <div class="stat">
+            <span class="stat-number" id="totalCount">0</span>
+            <span class="stat-label">Total</span>
+          </div>
+          <div class="stat">
+            <span class="stat-number" id="activeCount">0</span>
+            <span class="stat-label">Active</span>
+          </div>
+          <div class="stat">
+            <span class="stat-number" id="nodeCount">0</span>
+            <span class="stat-label">Total Nodes</span>
+          </div>
+          <div class="stat">
+            <span class="stat-number" id="integrationCount">0</span>
+            <span class="stat-label">Integrations</span>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Controls -->
+    <div class="controls">
+      <div class="container">
+        <div class="search-section">
+          <input type="text" id="searchInput" class="search-input"
+            placeholder="Search workflows by name, description, or integration...">
+        </div>
+
+        <div class="filter-section">
+          <div class="filter-group">
+            <label for="triggerFilter">Trigger:</label>
+            <select id="triggerFilter">
+              <option value="all">All Types</option>
+              <option value="Webhook">Webhook</option>
+              <option value="Scheduled">Scheduled</option>
+              <option value="Manual">Manual</option>
+              <option value="Complex">Complex</option>
+            </select>
+          </div>
+
+          <div class="filter-group">
+            <label for="complexityFilter">Complexity:</label>
+            <select id="complexityFilter">
+              <option value="all">All Levels</option>
+              <option value="low">Low (≤5 nodes)</option>
+              <option value="medium">Medium (6-15 nodes)</option>
+              <option value="high">High (16+ nodes)</option>
+            </select>
+          </div>
+
+          <div class="filter-group">
+            <label for="categoryFilter">Category:</label>
+            <select id="categoryFilter">
+              <option value="all">All Categories</option>
+              <!-- Categories will be populated dynamically -->
+            </select>
+          </div>
+
+          <div class="filter-group">
+            <label>
+              <input type="checkbox" id="activeOnly">
+              Active only
+            </label>
+          </div>
+
+          <button id="themeToggle" class="theme-toggle">🌙</button>
+        </div>
+
+        <div class="results-info">
+          <span id="resultsCount">Loading...</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="main">
+      <div class="container">
+        <!-- Loading State -->
+        <div id="loadingState" class="state loading">
+          <div class="icon">⚡</div>
+          <h3>Loading workflows...</h3>
+          <p>Please wait while we fetch your workflow data</p>
+        </div>
+
+        <!-- Error State -->
+        <div id="errorState" class="state error hidden">
+          <div class="icon">❌</div>
+          <h3>Error Loading Workflows</h3>
+          <p id="errorMessage">Something went wrong. Please try again.</p>
+          <button id="retryBtn" class="retry-btn">Retry</button>
+        </div>
+
+        <!-- No Results State -->
+        <div id="noResultsState" class="state hidden">
+          <div class="icon">🔍</div>
+          <h3>No workflows found</h3>
+          <p>Try adjusting your search terms or filters</p>
+        </div>
+
+        <!-- Workflows Grid -->
+        <div id="workflowGrid" class="workflow-grid hidden">
+          <!-- Workflow cards will be inserted here -->
+        </div>
+
+        <!-- Load More -->
+        <div id="loadMoreContainer" class="load-more hidden">
+          <button id="loadMoreBtn" class="load-more-btn">Load More</button>
+        </div>
+      </div>
+    </main>
+
+    <!-- Workflow Detail Modal -->
+    <div id="workflowModal" class="modal hidden">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 class="modal-title" id="modalTitle">Workflow Details</h2>
+          <button class="modal-close" id="modalClose">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="workflow-detail">
+            <h4>Description</h4>
+            <p id="modalDescription">Loading...</p>
+          </div>
+
+          <div class="workflow-detail">
+            <h4>Statistics</h4>
+            <div id="modalStats">Loading...</div>
+          </div>
+
+          <div class="workflow-detail">
+            <h4>Integrations</h4>
+            <div id="modalIntegrations">Loading...</div>
+          </div>
+
+          <div class="workflow-detail">
+            <h4>Actions</h4>
+            <div class="workflow-actions">
+              <a id="downloadBtn" class="action-btn primary" href="#" download>📥 Download JSON</a>
+              <button id="viewJsonBtn" class="action-btn">📄 View JSON</button>
+              <button id="viewDiagramBtn" class="action-btn">📊 View Diagram</button>
+              <button id="analyzeWorkflowBtn" class="action-btn" style="background: linear-gradient(135deg, #6366f1, #8b5cf6); color: white; border: none;">🧠 AI Analyzer</button>
+            </div>
+          </div>
+
+          <div class="workflow-detail hidden" id="jsonSection">
+            <div class="section-header">
+              <h4>Workflow JSON</h4>
+              <button id="copyJsonBtn" class="copy-btn" title="Copy JSON to clipboard">
+                📋 Copy
+              </button>
+            </div>
+            <div class="json-viewer" id="jsonViewer">Loading...</div>
+          </div>
+
+          <div class="workflow-detail hidden" id="diagramSection">
+            <div class="section-header">
+              <h4>Workflow Diagram</h4>
+              <div class="diagram-controls">
+                <button id="zoomInBtn" class="zoom-btn" title="Zoom In">🔍+</button>
+                <button id="zoomOutBtn" class="zoom-btn" title="Zoom Out">🔍-</button>
+                <button id="zoomResetBtn" class="zoom-btn" title="Reset Zoom">🔄</button>
+                <button id="copyDiagramBtn" class="copy-btn" title="Copy diagram code to clipboard">
+                  📋 Copy
+                </button>
+              </div>
+            </div>
+            <div id="diagramContainer" class="diagram-container">
+              <div id="diagramViewer">Loading diagram...</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- AI Analyzer Modal -->
+    <div id="analyzerModal" class="modal hidden">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 class="modal-title">🧠 AI Workflow Analyzer</h2>
+          <button class="modal-close" onclick="workflowApp.closeAnalyzerModal()">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="workflow-detail">
+            <div style="margin-bottom: 0.5rem; display: flex; flex-direction: column; gap: 0.5rem;">
+              <div class="file-input-wrapper">
+                <label id="analyzerFileBtn" for="analyzerFile" class="action-btn" style="cursor: pointer; white-space: nowrap; background: var(--bg-tertiary); border: 1px solid var(--border); display: inline-block; margin: 0;">Choose JSON Workflow File</label>
+                <input type="file" id="analyzerFile" accept=".json" style="display: none;">
+                
+                <div class="language-selection">
+                    <label for="analyzerLanguage" class="language-label">Output Language:</label>
+                    <select id="analyzerLanguage" class="search-input language-select">
+                        <!-- Options populated by JS -->
+                    </select>
+                </div>
+              </div>
+              
+              <!-- Filename Display Container -->
+              <div class="file-chosen-container" style="width: 100%; border: 1px solid var(--border); padding: 0.5rem; border-radius: 0.375rem; background: var(--bg-secondary); display: flex; align-items: center;">
+                 <span id="fileChosenText" class="file-chosen-text" title="No file chosen" style="flex: 1; max-width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 1rem;">No file chosen</span>
+              </div>
+
+              <span id="analyzerPasteLabel" style="font-size: 0.875rem; color: var(--text-secondary);">or paste below</span>
+            </div>
+            <textarea id="analyzerJson" class="json-viewer" placeholder="Paste complete workflow JSON here..."></textarea>
+            
+            <p style="font-size: 0.9rem; font-weight: 500; color: var(--text); margin-top: 1.5rem; margin-bottom: 0.5rem;">Select an AI provider below to start the analysis:</p>
+            <p style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 0; margin-bottom: 1rem;">To enable functionality, configure the API key and desired model in the .env file.</p>
+            <div class="workflow-actions" style="justify-content: space-between; margin-top: 0; gap: 0.25rem; display: flex; flex-wrap: nowrap; overflow-x: auto;">
+              <button id="btn-openai" onclick="workflowApp.analyzeWorkflow('openai')" class="action-btn primary analyzer-btn" style="background: #10a37f; border-color: #10a37f;">
+                🤖 ChatGPT
+              </button>
+              <button id="btn-deepseek" onclick="workflowApp.analyzeWorkflow('deepseek')" class="action-btn primary analyzer-btn" style="background: #3b82f6; border-color: #3b82f6;">
+                🐳 DeepSeek
+              </button>
+              <button id="btn-claude" onclick="workflowApp.analyzeWorkflow('claude')" class="action-btn primary analyzer-btn" style="background: #d97757; border-color: #d97757;">
+                🧠 Claude
+              </button>
+              <button id="btn-grok" onclick="workflowApp.analyzeWorkflow('grok')" class="action-btn primary analyzer-btn" style="background: #000000; border-color: #333333;">
+                🌌 Grok
+              </button>
+              <button id="btn-gemini" onclick="workflowApp.analyzeWorkflow('gemini')" class="action-btn primary analyzer-btn" style="background: #1a73e8; border-color: #1a73e8;">
+                ✨ Gemini
+              </button>
+            </div>
+
+            <!-- Analysis Loading State (Moved here) -->
+            <div id="analysisLoading" class="workflow-detail hidden" style="text-align: center; padding: 1rem; margin-top: 1rem; border: 1px dashed var(--border); border-radius: 0.5rem;">
+                <div class="icon pulse-icon" style="font-size: 1.5rem; margin-bottom: 0.5rem;">⚡</div>
+                <p style="margin: 0;">Analyzing workflow... This may take a few seconds.</p>
+            </div>
+
+
+
+
+          </div>
+
+          <div id="analysisResult" class="workflow-detail hidden" style="margin-top: 2rem; border-top: 1px solid var(--border); padding-top: 1rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+              <h4>Analysis Result:</h4>
+              <div style="display: flex; gap: 0.5rem;">
+                <button onclick="workflowApp.downloadAnalysis()" class="action-btn secondary" style="padding: 0.25rem 0.75rem; font-size: 0.875rem;">
+                  📥 Download .md
+                </button>
+                <button onclick="workflowApp.copyAnalysis()" class="action-btn secondary" style="padding: 0.25rem 0.75rem; font-size: 0.875rem;">
+                  <span id="copyAnalysisText">📋 Copy</span>
+                </button>
+              </div>
+            </div>
+            <div id="analysisContent" style="line-height: 1.8; background: var(--bg-secondary); padding: 1.5rem; border-radius: 0.5rem; border: 1px solid var(--border);"></div>
+          </div>
+          
+          <div class="workflow-detail" style="margin-top: 1rem;">
+            <!-- Prompt Selection Controls -->
+            <div style="display: flex; flex-direction: column; gap: 1rem;">
+                <!-- Radio Buttons -->
+                <div style="display: flex; gap: 1.5rem; align-items: center;">
+                    <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer; color: var(--text);">
+                        <input type="radio" name="promptType" value="default" checked onchange="workflowApp.handlePromptTypeChange(this.value)">
+                        <span style="font-weight: 400; font-size: 0.85rem;">Default Prompt</span>
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer; color: var(--text);">
+                        <input type="radio" name="promptType" value="custom" onchange="workflowApp.handlePromptTypeChange(this.value)">
+                        <span style="font-weight: 400; font-size: 0.85rem;">Custom Prompt</span>
+                    </label>
+                </div>
+
+                <!-- Custom Prompt Area (Hidden by default) -->
+                <div id="promptArea" style="display: none; width: 100%; transition: all 0.3s ease;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                        <label for="customPrompt" style="font-size: 0.9rem; font-weight: 500; color: var(--text);">System Prompt:</label>
+                        <button onclick="workflowApp.downloadPrompt()" class="action-btn secondary" style="padding: 0.2rem 0.6rem; font-size: 0.8rem; display: flex; align-items: center; gap: 0.3rem;">
+                            📥 Download .md
+                        </button>
+                    </div>
+                    <textarea id="customPrompt" class="json-viewer" style="width: 100%; min-height: 250px; opacity: 1; cursor: text; resize: vertical;" placeholder="System prompt will appear here..."></textarea>
+                </div>
+            </div>
+          </div>
+          
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script>
+    // Supported Languages matching system_prompts.py
+    const SUPPORTED_LANGUAGES = [
+        { code: 'en', name: 'English (EN)' },
+        { code: 'pt-br', name: 'Português (PT-BR)' },
+        { code: 'he', name: 'Hebrew (HE)' },
+        { code: 'es', name: 'Español (ES)' },
+        { code: 'fr', name: 'French (FR)' },
+        { code: 'de', name: 'German (DE)' },
+        { code: 'it', name: 'Italian (IT)' },
+        { code: 'zh', name: 'Mandarin (ZH)' },
+        { code: 'ja', name: 'Japanese (JA)' },
+        { code: 'hi', name: 'Hindi (HI)' },
+        { code: 'ru', name: 'Russian (RU)' }
+    ];
+
+    const SYSTEM_PROMPTS = {
+        'English (EN)': `You are an n8n Solutions Architect, Specialist in Workflow Documentation.
+Your task is to decode the provided **n8n Workflow JSON** and translate it into a clear, engaging, and valuable guide for a non-technical user.
+
+**CRITICAL ANALYSIS INSTRUCTIONS:**
+1.  **Ignore Generic Text:** Do not rely solely on the "description" or "notes" fields in the JSON, as they are often generic (e.g., "This node performs automated tasks").
+2.  **Deep Dive:** You must analyze the \`nodes\` array. Look at the \`type\` (e.g., \`n8n-nodes-base.googleSheets\`), the \`name\`, and specifically the \`parameters\` to understand the *actual logic* (e.g., is it reading or writing? sending an email or a Slack message?).
+3.  **Trace the Path:** Look at the \`connections\` to understand the sequence of events.
+
+**OUTPUT FORMAT (Strict Markdown):**
+
+# [Insert Creative Title Based on Logic]
+
+### 🎯 What does this workflow actually do?
+*Write a 2-sentence "Elevator Pitch". Focus on the **value** and **outcome**, not the technology. (e.g., "Instead of manually copying data from emails to Excel, this workflow automatically organizes every new lead into your database and notifies your team instantly.")*
+
+### ⚡ The Logic: Step-by-Step
+*Explain the flow as a story. Use bold for key actions. Do not use technical node names.*
+*   **Step 1:** [Trigger] (e.g., "It starts when a new order arrives in WooCommerce...")
+*   **Step 2:** [Action] (e.g., "The AI analyzes the customer's sentiment...")
+*   **Step 3:** [Action]
+*   **Step 4:** [Outcome]
+
+### 🛠️ Key Configuration Points
+*Analyze the JSON identifying nodes that contain specific ("hardcoded") data or parameters that the user will certainly need to check. List the main nodes that require personalized attention (beyond credentials).*
+*   **[Node Name]:** Explain what to check (e.g., "In the 'Gmail' node, check if the recipient is correct or change it to your email").
+*   **[Node Name]:** (e.g., "In this Spreadsheet node, confirm that the Sheet ID matches your file").
+*   **[Node Name]:** (e.g., "Here is the AI 'System Prompt'. Edit this text to change the assistant's personality or rules").
+
+### 💡 Real-World Use Case
+*Describe a specific scenario where this saves time or money.*
+
+### ⚠️ Setup Requirements
+*Analyze the \`credentials\` section or node requirements.*
+*   List any API keys, accounts, or specific spreadsheet columns needed (look at \`parameters\` in Sheet/Database nodes).
+
+### 🚀 Customization Tips
+*Suggest how the user can alter it to meet their needs, ways to serve other types of businesses, or types of integrators (WhatsApp, Telegram, CRM, ERP) and other workflow improvement options. Be didactic.*
+
+### 🔌 Integrated Apps & Services
+*List the specific services detected in the nodes with emojis.*
+*   Example: 🟢 Google Sheets, 💬 Slack, 🧠 OpenAI`,
+
+        'Português (PT-BR)': `Você é um Arquiteto de Soluções n8n, Especialista em Documentação de Workflows.
+
+**INSTRUÇÕES DE ANÁLISE CRÍTICA:**
+1.  **Ignore Texto Genérico:** Não confie apenas nos campos "description" ou "notes" no JSON, pois eles geralmente são genéricos.
+2.  **Aprofunde-se:** Você deve analisar o array \`nodes\`. Olhe para o \`type\` (ex: \`n8n-nodes-base.googleSheets\`), o \`name\` e especificamente os \`parameters\` para entender a *lógica real* (ex: está lendo ou escrevendo? enviando um e-mail ou uma mensagem no Slack?).
+3.  **Rastreie o Caminho:** Olhe para as \`connections\` para entender a sequência de eventos.
+
+**FORMATO DE SAÍDA (Markdown Estrito):**
+
+# [Insira um Título Baseado na Lógica]
+
+### 🎯 O que este workflow realmente faz?
+*Escreva um "Elevator Pitch" de 2 frases. Concentre-se no **valor** e no **resultado**, não na tecnologia. (ex: "Em vez de copiar manualmente dados de e-mails para o Excel, este workflow organiza automaticamente cada novo lead em seu banco de dados e notifica sua equipe instantaneamente.")*
+
+### ⚡ A Lógica: Passo a Passo
+*Explique o fluxo como uma história. Use negrito para ações principais. Não use nomes técnicos de nós.*
+*   **Passo 1:** [Gatilho] (ex: "Começa quando um novo pedido chega no WooCommerce...")
+*   **Passo 2:** [Ação] (ex: "A IA analisa o sentimento do cliente...")
+*   **Passo 3:** [Ação]
+*   **Passo 4:** [Resultado]
+
+### 🛠️ Pontos de Alteração a Serem Observados
+*Analise o JSON identificando nós que contêm dados específicos ("hardcoded") ou parametros que o usuário certamente precisará verificar. Liste os principais nós que requerem atenção personalizada. Além de credenciais*
+*   **[Nome do Nó]:** Explique o que verificar (ex: "No nó 'Gmail', verifique se o destinatário está correto ou altere para o seu e-mail").
+*   **[Nome do Nó]:** (ex: "Neste nó de Planilha, confirme se o ID da planilha corresponde ao seu arquivo").
+*   **[Nome do Nó]:** (ex: "Aqui está o 'System Prompt' da IA. Edite este texto para mudar a personalidade ou as regras do assistente").
+
+### 💡 Caso de Uso no Mundo Real
+*Descreva um cenário específico onde isso economiza tempo ou dinheiro.*
+
+### ⚠️ Requisitos de Configuração
+*Analise a seção \`credentials\` ou requisitos dos nós.*
+*   Liste quaisquer chaves de API, contas ou colunas de planilha específicas necessárias (olhe para \`parameters\` em nós de Planilha/Banco de Dados).
+
+### 🚀 Dicas de Customização
+*Sugira como o usuário pode alterá-lo para atender às suas necessidades, formas para atender outros tipos de negócios, ou tipos de integradores, whatsapp, telegram, CRM, ERP e demais opções de melhorias do fluxo para atender necessidades, seja didadico.*
+
+### 🔌 Apps e Serviços Integrados
+*Liste os serviços específicos detectados nos nós com emojis.*
+*   Exemplo: 🟢 Google Sheets, 💬 Slack, 🧠 OpenAI`,
+
+        'Hebrew (HE)': `אתה ארכיטקט פתרונות n8n, מומחה בתיעוד תהליכים (Workflows).
+המשימה שלך היא לפענח את ה-JSON של זרימת העבודה (Workflow) של n8n שסופק ולתרגם אותו למדריך ברור, מרתק ובעל ערך למשתמש לא טכני.
+
+**הוראות ניתוח קריטיות:**
+1.  **התעלם מטקסט גנרי:** אל תסתמך רק על השדות "description" או "notes" ב-JSON, מכיוון שהם לרוב גנריים.
+2.  **צלול לעומק:** עליך לנתח את מערך ה-\`nodes\`. בדוק את ה-\`type\`, ה-\`name\` ובמיוחד את ה-\`parameters\` כדי להבין את *הלוגיקה האמיתית*.
+3.  **עקוב אחר הנתיב:** בדוק את ה-\`connections\` כדי להבין את רצף האירועים.
+
+**פורמט פלט (Markdown קפדני):**
+
+# [הכנס כותרת יצירתית המבוססת על הלוגיקה]
+
+### 🎯 מה זרימת העבודה הזו באמת עושה?
+*כתוב "נאום מעלית" של 2 משפטים. התמקד ב**ערך** וב**תוצאה**.*
+
+### ⚡ הלוגיקה: צעד אחר צעד
+*הסבר את הזרימה כסיפור. השתמש בהדגשה לפעולות מפתח. אל תשתמש בשמות טכניים של צמתים.*
+*   **צעד 1:** [טריגר/גורם מפעיל]
+*   **צעד 2:** [פעולה]
+*   **צעד 3:** [פעולה]
+*   **צעד 4:** [תוצאה]
+
+### 🛠️ נקודות תצורה שיש לשים לב אליהן
+*נתח את ה-JSON וזהה צמתים המכילים נתונים ספציפיים ("hardcoded") או פרמטרים שהמשתמש בוודאי יצטרך לבדוק. רשום את הצמתים העיקריים הדורשים תשומת לב אישית (מעבר לאישורים).*
+*   **[שם הצומת]:** הסבר מה לבדוק (לדוגמה: "בצומת 'Gmail', בדוק אם הנמען נכון או שנה אותו לאימייל שלך").
+*   **[שם הצומת]:** (לדוגמה: "בצומת גיליון זה, אשר שמזהה הגיליון תואם לקובץ שלך").
+*   **[שם הצומת]:** (לדוגמה: "כאן נמצא ה-'System Prompt' של ה-AI. ערוך טקסט זה כדי לשנות את האישיות או הכללים של העוזר").
+
+### 💡 מקרה שימוש בעולם האמיתי
+*תאר תרחיש ספציפי שבו זה חוסך זמן או כסף.*
+
+### ⚠️ דרישות התקנה
+*נתח את סעיף ה-\`credentials\` או דרישות הצמתים (מפתחות API, חשבונות, עמודות).*
+
+### 🚀 טיפים להתאמה אישית
+*הצע כיצד המשתמש יכול לשנות אותו כדי לענות על צרכיו, דרכים לשרת סוגים אחרים של עסקים, או סוגי אינטגרטורים (WhatsApp, Telegram, CRM, ERP) ואפשרויות שיפור זרימת עבודה אחרות. היה דידקטי.*
+
+### 🔌 אפליקציות ושירותים משולבים
+*רשום את השירותים הספציפיים שזוהו בצמתים עם אימוג'ים.*`,
+
+        'Español (ES)': `Eres un Arquitecto de Soluciones n8n, Especialista en Documentación de Flujos de Trabajo.
+Tu tarea es decodificar el **JSON del Flujo de Trabajo n8n** proporcionado y traducirlo en una guía clara, atractiva y valiosa para un usuario no técnico.
+
+**INSTRUCCIONES DE ANÁLISIS CRÍTICO:**
+1.  **Ignora Texto Genérico:** No confíes únicamente en los campos "description" o "notes" en el JSON, ya que a menudo son genéricos.
+2.  **Profundiza:** Debes analizar el array \`nodes\`. Mira el \`type\` (ej: \`n8n-nodes-base.googleSheets\`), el \`name\` y específicamente los \`parameters\` para entender la *lógica real* (ej: ¿está leyendo o escribiendo? ¿enviando un correo o un mensaje en Slack?).
+3.  **Rastrea el Camino:** Mira las \`connections\` para entender la secuencia de eventos.
+
+**FORMATO DE SALIDA (Markdown Estricto):**
+
+# [Inserta un Título Creativo Basado en la Lógica]
+
+### 🎯 ¿Qué hace realmente este flujo de trabajo?
+*Escribe un "Elevator Pitch" de 2 frases. Céntrate en el **valor** y el **resultado**, no en la tecnología.*
+
+### ⚡ La Lógica: Paso a Paso
+*Explica el flujo como una historia. Usa negrita para acciones clave. No uses nombres técnicos de nodos.*
+*   **Paso 1:** [Disparador] (ej: "Comienza cuando llega un nuevo pedido en WooCommerce...")
+*   **Paso 2:** [Acción] (ej: "La IA analiza el sentimiento del cliente...")
+*   **Paso 3:** [Acción]
+*   **Paso 4:** [Resultado]
+
+### 🛠️ Puntos de Configuración a Observar
+*Analiza el JSON identificando nodos que contienen datos específicos ("hardcoded") o parámetros que el usuario ciertamente necesitará verificar. Lista los nodos principales que requieren atención personalizada (más allá de las credenciales).*
+*   **[Nombre del Nodo]:** Explica qué verificar (ej: "En el nodo 'Gmail', verifica si el destinatario es correcto o cámbialo a tu correo").
+*   **[Nombre del Nodo]:** (ej: "En este nodo de Hoja de Cálculo, confirma que el ID de la hoja corresponda a tu archivo").
+*   **[Nombre del Nodo]:** (ej: "Aquí está el 'System Prompt' de la IA. Edita este texto para cambiar la personalidad o las reglas del asistente").
+
+### 💡 Caso de Uso en el Mundo Real
+*Describe un escenario específico donde esto ahorra tiempo o dinero.*
+
+### ⚠️ Requisitos de Configuración
+*Analiza la sección \`credentials\` o requisitos de los nodos.*
+*   Lista cualquier clave API, cuenta o columna de hoja de cálculo específica necesaria (mira \`parameters\` en nodos de Hoja/Base de Datos).
+
+### 🚀 Consejos de Personalización
+*Sugiere cómo el usuario puede alterarlo para satisfacer sus necesidades, formas de atender otros tipos de negocios, o tipos de integradores (WhatsApp, Telegram, CRM, ERP) y otras opciones de mejora del flujo. Sé didáctico.*
+
+### 🔌 Apps y Servicios Integrados
+*Lista los servicios específicos detectados en los nodos con emojis.*
+*   Ejemplo: 🟢 Google Sheets, 💬 Slack, 🧠 OpenAI`,
+
+        'French (FR)': `Vous êtes un Architecte de Solutions n8n de Classe Mondiale et un Rédacteur Technique.
+Votre tâche est de décoder le **JSON du Workflow n8n** fourni et de le traduire en un guide clair, engageant et précieux pour un utilisateur non technique.
+
+**INSTRUCTIONS D'ANALYSE CRITIQUE:**
+1.  **Ignorez le Texte Générique:** Ne vous fiez pas uniquement aux champs "description" ou "notes" dans le JSON.
+2.  **Approfondissez:** Vous devez analyser le tableau \`nodes\`. Regardez le \`type\`, le \`name\` et spécifiquement les \`parameters\` pour comprendre la *logique réelle*.
+3.  **Tracez le Chemin:** Regardez les \`connections\` pour comprendre la séquence des événements.
+
+**FORMAT DE SORTIE (Markdown Strict):**
+
+# [Insérez un Titre Créatif Basé sur la Logique]
+
+### 🎯 Que fait réellement ce workflow ?
+*Écrivez un "Elevator Pitch" de 2 phrases. Concentrez-vous sur la **valeur** et le **résultat**.*
+
+### ⚡ La Logique : Étape par Étape
+*Expliquez le flux comme une histoire. Utilisez le gras pour les actions clés. N'utilisez pas de noms techniques de nœuds.*
+*   **Étape 1:** [Déclencheur]
+*   **Étape 2:** [Action]
+*   **Étape 3:** [Action]
+*   **Étape 4:** [Résultat]
+
+### 🛠️ Points de Configuration à Surveiller
+*Analysez le JSON pour identifier les nœuds contenant des données spécifiques ("hardcoded") o des paramètres que l'utilisateur devra certainement vérifier. Listez les principaux nœuds nécessitant une attention personnalisée.*
+*   **[Nom du Nœud]:** Expliquez quoi vérifier (ex: "Dans le nœud 'Gmail', vérifiez si le destinataire est correct ou changez-le pour votre email").
+*   **[Nom du Nœud]:** (ex: "Dans ce nœud Tableur, confirmez que l'ID de la feuille correspond à votre fichier").
+*   **[Nom du Nœud]:** (ex: "Voici le 'System Prompt' de l'IA. Modifiez ce texte pour changer la personnalité ou les règles de l'assistant").
+
+### 💡 Cas d'Utilisation Réel
+*Décrivez un scénario spécifique où cela permet d'économiser du temps ou de l'argent.*
+
+### ⚠️ Prérequis de Configuration
+*Analysez la section \`credentials\` ou les prérequis des nœuds.*
+*   Listez les clés API, comptes ou colonnes spécifiques nécessaires.
+
+### 🚀 Conseils de Personnalisation
+*Suggérez comment l'utilisateur peut le modifier pour répondre à ses besoins, des moyens de servir d'autres types d'entreprises, ou des types d'intégrateurs (WhatsApp, Telegram, CRM, ERP) et d'autres options d'amélioration du flux. Soyez didactique.*
+
+### 🔌 Apps et Services Intégrés
+*Listez les services spécifiques détectés avec des émojis.*`,
+
+        'German (DE)': `Sie sind ein erstklassiger n8n-Lösungsarchitekt und technischer Redakteur.
+Ihre Aufgabe ist es, das bereitgestellte **n8n Workflow JSON** zu entschlüsseln und in einen klaren, ansprechenden Leitfaden für nicht-technische Benutzer zu übersetzen.
+
+**ANWEISUNGEN ZUR KRITISCHEN ANALYSE:**
+1.  **Ignorieren Sie generischen Text:** Verlassen Sie sich nicht nur auf Beschreibungen im JSON.
+2.  **Tauchen Sie tief ein:** Analysieren Sie das \`nodes\`-Array, insbesondere \`type\`, \`name\` und \`parameters\`, um die *tatsächliche Logik* zu verstehen.
+3.  **Verfolgen Sie den Pfad:** Sehen Sie sich die \`connections\` an, um die Abfolge zu verstehen.
+
+**AUSGABEFORMAT (Striktes Markdown):**
+
+# [Kreativen Titel basierend auf der Logik einfügen]
+
+### 🎯 Was macht dieser Workflow eigentlich?
+*Schreiben Sie einen "Elevator Pitch" in 2 Sätzen. Konzentrieren Sie sich auf den **Wert** und das **Ergebnis**.*
+
+### ⚡ Die Logik: Schritt für Schritt
+*Erklären Sie den Ablauf wie eine Geschichte. Verwenden Sie Fett für wichtige Aktionen. Keine technischen Knotennamen.*
+*   **Schritt 1:** [Auslöser]
+*   **Schritt 2:** [Aktion]
+*   **Schritt 3:** [Aktion]
+*   **Schritt 4:** [Ergebnis]
+
+### 🛠️ Wichtige Konfigurationspunkte
+*Analysieren Sie das JSON auf Knoten, die spezifische ("hardcoded") Daten oder Parameter enthalten, die der Benutzer überprüfen muss. Listen Sie die Hauptknoten auf, die Aufmerksamkeit erfordern.*
+*   **[Knotenname]:** Erklären Sie, was zu prüfen ist (z.B. "Prüfen Sie im Knoten 'Gmail', ob der Empfänger korrekt ist").
+*   **[Knotenname]:** (z.B. "Bestätigen Sie in diesem Tabellen-Knoten, dass die Sheet-ID übereinstimmt").
+*   **[Knotenname]:** (z.B. "Hier ist der 'System Prompt' der KI. Bearbeiten Sie diesen Text, um die Persönlichkeit anzupassen").
+
+### 💡 Anwendungsfall aus der Praxis
+*Beschreiben Sie ein Szenario, in dem dies Zeit oder Geld spart.*
+
+### ⚠️ Einrichtungsanforderungen
+*Listen Sie alle erforderlichen API-Schlüssel, Konten oder Tabellenspalten auf.*
+
+### 🚀 Tipps zur Anpassung
+*Schlagen Sie vor, wie der Benutzer es an seine Bedürfnisse anpassen kann, Möglichkeiten für andere Unternehmenstypen oder Integratoren (WhatsApp, Telegram, CRM, ERP) und andere Verbesserungsoptionen. Seien Sie didaktisch.*
+
+### 🔌 Integrierte Apps & Dienste
+*Listen Sie die erkannten Dienste mit Emojis auf.*`,
+
+        'Italian (IT)': `Sei un Architetto di Soluzioni n8n di Classe Mondiale e uno Scrittore Tecnico.
+Il tuo compito è decodificare il **JSON del Workflow n8n** fornito e tradurlo in una guida chiara, coinvolgente e preziosa per un utente non tecnico.
+
+**ISTRUZIONI DI ANALISI CRITICA:**
+1.  **Ignora il Testo Generico:** Non affidarti solo ai campi "description" o "notes" nel JSON.
+2.  **Approfondisci:** Devi analizzare l'array \`nodes\`. Guarda il \`type\`, il \`name\` e specificamente i \`parameters\` per capire la *logica reale*.
+3.  **Traccia il Percorso:** Guarda le \`connections\` per capire la sequenza degli eventi.
+
+**FORMATO DI OUTPUT (Markdown Rigoroso):**
+
+# [Inserisci un Titolo Creativo Basato sulla Logica]
+
+### 🎯 Cosa fa realmente questo workflow?
+*Scrivi un "Elevator Pitch" di 2 frasi. Concentrati sul **valore** e sul **risultato**.*
+
+### ⚡ La Logica: Passo dopo Passo
+*Spiega il flusso come una storia. Usa il grassetto per le azioni chiave. Non usare nomi tecnici dei nodi.*
+*   **Passo 1:** [Trigger]
+*   **Passo 2:** [Azione]
+*   **Passo 3:** [Azione]
+*   **Passo 4:** [Risultato]
+
+### 🛠️ Punti di Configurazione da Osservare
+*Analizza il JSON identificando nodi che contengono dati specifici ("hardcoded") o parametri che l'utente dovrà verificare. Elenca i nodi principali che richiedono attenzione personalizzata.*
+*   **[Nome Nodo]:** Spiega cosa controllare (es: "Nel nodo 'Gmail', controlla se il destinatario è corretto").
+*   **[Nome Nodo]:** (es: "In questo nodo Foglio di calcolo, conferma che l'ID del foglio corrisponda al tuo file").
+*   **[Nome Nodo]:** (es: "Qui c'è il 'System Prompt' dell'IA. Modifica questo testo per cambiare la personalità").
+
+### 💡 Caso d'Uso Reale
+*Descrivi uno scenario specifico in cui questo fa risparmiare tempo o denaro.*
+
+### ⚠️ Requisiti di Configurazione
+*Analizza la sezione \`credentials\` o i requisiti dei nodi (chiavi API, account, colonne).*
+
+### 🚀 Consigli per la Personalizzazione
+*Suggerisci come l'utente può modificarlo per soddisfare le proprie esigenze, modi per servire altri tipi di aziende, o tipi di integratori (WhatsApp, Telegram, CRM, ERP) e altre opzioni di miglioramento. Sii didattico.*
+
+### 🔌 App e Servizi Integrati
+*Elenca i servizi specifici rilevati con emoji.*`,
+
+        'Mandarin (ZH)': `您是一位世界级的 n8n 解决方案架构师和技术作家。
+您的任务是解码提供的 **n8n 工作流 JSON**，并将其翻译成一份清晰、引人入胜且对非技术用户有价值的指南。
+
+**批判性分析说明：**
+1.  **忽略通用文本：** 不要仅仅依赖 JSON 中的“description”或“notes”字段。
+2.  **深入挖掘：** 您必须分析 \`nodes\` 数组。查看 \`type\`、\`name\`，特别是 \`parameters\`，以了解 *实际逻辑*。
+3.  **追踪路径：** 查看 \`connections\` 以了解事件的顺序。
+
+**输出格式（严格的 Markdown）：**
+
+# [根据逻辑插入创意标题]
+
+### 🎯 这个工作流实际上是做什么的？
+*写一段 2 句话的“电梯游说”。专注于 **价值** 和 **结果**。*
+
+### ⚡ 逻辑：一步步解析
+*像讲故事一样解释流程。对关键动作使用粗体。不要使用技术节点名称。*
+*   **步骤 1:** [触发器]
+*   **步骤 2:** [动作]
+*   **步骤 3:** [动作]
+*   **步骤 4:** [结果]
+
+### 🛠️ 需注意的配置要点
+*分析 JSON，识别包含特定（“硬编码”）数据或参数的节点，用户肯定需要检查这些数据。列出需要个性化关注的主要节点（除凭据外）。*
+*   **[节点名称]:** 解释要检查的内容（例如：“在‘Gmail’节点中，检查收件人是否正确或将其更改为您的电子邮件”）。
+*   **[节点名称]:**（例如：“在此电子表格节点中，确认工作表 ID 与您的文件匹配”）。
+*   **[节点名称]:**（例如：“这是 AI 的‘系统提示’。编辑此文本以更改助手的个性或规则”）。
+
+### 💡 实际应用场景
+*描述一个可以节省时间或金钱的具体场景。*
+
+### ⚠️ 设置要求
+*分析 \`credentials\` 部分或节点要求（API 密钥、帐户、特定列）。*
+
+### 🚀 自定义提示
+*建议用户如何更改它以满足他们的需求，服务于其他类型业务的方式，或集成商类型（WhatsApp、Telegram、CRM、ERP）以及其他工作流改进选项。要有教育意义。*
+
+### 🔌 集成的应用和服务
+*用表情符号列出在节点中检测到的具体服务。*`,
+
+        'Japanese (JA)': `あなたは世界クラスの n8n ソリューションアーキテクトであり、テクニカルライターです。
+あなたのタスクは、提供された **n8n ワークフロー JSON** を解読し、非技術系ユーザー向けの明確で魅力的かつ価値のあるガイドに翻訳することです。
+
+**重要な分析手順:**
+1.  **一般的なテキストを無視:** JSON 内の "description" や "notes" フィールドだけに頼らないでください。
+2.  **深く掘り下げる:** \`nodes\` 配列を分析し、\`type\`、\`name\`、\`parameters\` を見て、*実際のロジック*を理解してください。
+3.  **パスをたどる:** \`connections\` を見て、イベントの順序を理解してください。
+
+**出力形式 (厳密な Markdown):**
+
+# [ロジックに基づいた創造的なタイトルを挿入]
+
+### 🎯 このワークフローは実際に何をするのか？
+*2文の「エレベーターピッチ」を書いてください。**価値**と**結果**に焦点を当ててください。*
+
+### ⚡ ロジック：ステップバイステップ
+*フローを物語のように説明してください。主要なアクションには太字を使用してください。技術的なノード名は使用しないでください。*
+*   **ステップ 1:** [トリガー]
+*   **ステップ 2:** [アクション]
+*   **ステップ 3:** [アクション]
+*   **ステップ 4:** [結果]
+
+### 🛠️ 確認すべき設定ポイント
+*JSONを分析し、ユーザーが確認する必要がある特定の（「ハードコードされた」）データまたはパラメータを含むノードを特定します。個人的な注意が必要な主要なノードをリストアップしてください。*
+*   **[ノード名]:** 確認内容を説明します（例：「『Gmail』ノードで、受信者が正しいか確認するか、自分のメールアドレスに変更してください」）。
+*   **[ノード名]:**（例：「このスプレッドシートノードで、シートIDがファイルと一致することを確認してください」）。
+*   **[ノード名]:**（例：「これがAIの『システムプロンプト』です。このテキストを編集して、アシスタントの性格やルールを変更してください」）。
+
+### 💡 実際の使用例
+*これが時間やお金を節約する具体的なシナリオを説明してください。*
+
+### ⚠️ 設定要件
+* \`credentials\` セクションまたはノードの要件（APIキー、アカウント、カラム）を分析してください。*
+
+### 🚀 カスタマイズのヒント
+*ユーザーがニーズに合わせて変更する方法、他の種類のビジネスに対応する方法、または統合の種類（WhatsApp、Telegram、CRM、ERP）やその他のワークフロー改善オプションを提案してください。教育的であってください。*
+
+### 🔌 統合されたアプリとサービス
+*ノードで検出された特定のサービスを絵文字でリストアップしてください。*`,
+
+        'Hindi (HI)': `आप एक विश्व-स्तरीय n8n समाधान वास्तुकार और तकनीकी लेखक हैं।
+आपका कार्य प्रदान किए गए **n8n वर्कफ़्लो JSON** को डिकोड करना और इसे गैर-तकनीकी उपयोगकर्ता के लिए एक स्पष्ट, आकर्षक और मूल्यवान गाइड में अनुवाद करना है।
+
+**महत्वपूर्ण विश्लेषण निर्देश:**
+1.  **सामान्य पाठ को अनदेखा करें:** JSON में केवल "description" या "notes" फ़ील्ड पर भरोसा न करें।
+2.  **गहराई से देखें:** आपको \`nodes\` सरणी का विश्लेषण करना चाहिए। *वास्तविक तर्क* को समझने के लिए \`type\`, \`name\`, और विशेष रूप से \`parameters\` को देखें।
+3.  **पथ ट्रेस करें:** घटनाओं के क्रम को समझने के लिए \`connections\` को देखें।
+
+**आउटपुट स्वरूप (सख्त मार्कडाउन):**
+
+# [तर्क के आधार पर रचनात्मक शीर्षक डालें]
+
+### 🎯 यह वर्कफ़्लो वास्तव में क्या करता है?
+*2-वाक्य का "एलिवेटर पिच" लिखें। **मूल्य** और **परिणाम** पर ध्यान दें। (उदाहरण के लिए, "ईमेल से एक्सेल में डेटा को मैन्युअल रूप से कॉपी करने के बजाय, यह वर्कफ़्लो स्वचालित रूप से आपके डेटाबेस में हर नई लीड को व्यवस्थित करता है और आपकी टीम को तुरंत सूचित करता है।")*
+
+### ⚡ तर्क: चरण-दर-चरण
+*प्रवाह को एक कहानी के रूप में समझाएं। मुख्य क्रियाओं के लिए बोल्ड का उपयोग करें। तकनीकी नोड नामों का उपयोग न करें।
+*   **चरण 1:** [ट्रिगर]
+*   **चरण 2:** [क्रिया]
+*   **चरण 3:** [क्रिया]
+*   **चरण 4:** [परिणाम]
+
+### 🛠️ ध्यान देने योग्य कॉन्फ़िगरेशन बिंदु
+*JSON का विश्लेषण करें और उन नोड्स की पहचान करें जिनमें विशिष्ट डेटा या पैरामीटर हैं जिन्हें उपयोगकर्ता को निश्चित रूप से जांचने की आवश्यकता होगी। उन मुख्य नोड्स को सूचीबद्ध करें जिन पर व्यक्तिगत ध्यान देने की आवश्यकता है।*
+*   **[नोड का नाम]:** समझाएं कि क्या जांचना है (उदाहरण: "'Gmail' नोड में, जांचें कि प्राप्तकर्ता सही है या नहीं या इसे अपने ईमेल में बदलें")।
+*   **[नोड का नाम]:** (उदाहरण: "इस स्प्रेडशीट नोड में, पुष्टि करें कि शीट आईडी आपकी फ़ाइल से मेल खाती है")।
+*   **[नोड का नाम]:** (उदाहरण: "यहाँ AI का 'सिस्टम प्रॉम्प्ट' है। सहायक के व्यक्तित्व या नियमों को बदलने के लिए इस पाठ को संपादित करें")।
+
+### 💡 वास्तविक दुनिया का उपयोग मामला
+*एक विशिष्ट परिदृश्य का वर्णन करें जहां यह समय या पैसा बचाता है।*
+
+### ⚠️ सेटअप आवश्यकताएँ
+* \`credentials\` अनुभाग या नोड आवश्यकताओं (API कुंजी, खाते, कॉलम) का विश्लेषण करें।*
+
+### 🚀 अनुकूलन सुझाव
+*सुझाव दें कि उपयोगकर्ता अपनी आवश्यकताओं को पूरा करने के लिए इसे कैसे बदल सकता है, अन्य प्रकार के व्यवसायों, या एकीकरणकर्ताओं (WhatsApp, Telegram, CRM, ERP) और अन्य वर्कफ़्लो सुधार विकल्पों को कैसे पूरा किया जाए। शिक्षाप्रद बनें।
+*
+
+### 🔌 एकीकृत ऐप्स और सेवाएँ
+*इमोजी के साथ नोड्स में पहचानी गई विशिष्ट सेवाओं को सूचीबद्ध करें।*`,
+
+        'Russian (RU)': `Вы — Архитектор решений n8n мирового класса и Технический писатель.
+Ваша задача — декодировать предоставленный **JSON рабочего процесса n8n** и перевести его в понятное, увлекательное и ценное руководство для нетехнического пользователя.
+
+**ИНСТРУКЦИИ ПО КРИТИЧЕСКОМУ АНАЛИЗУ:**
+1.  **Игнорируйте общий текст:** Не полагайтесь исключительно на поля "description" или "notes" в JSON.
+2.  **Погрузитесь глубже:** Вы должны проанализировать массив \`nodes\`. Посмотрите на \`type\`, \`name\` и особенно \`parameters\`, чтобы понять *фактическую логику*.
+3.  **Проследите путь:** Посмотрите на \`connections\`, чтобы понять последовательность событий.
+
+**ФОРМАТ ВЫВОДА (Строгий Markdown):**
+
+# [Вставьте креативный заголовок, основанный на логике]
+
+### 🎯 Что на самом деле делает этот рабочий процесс?
+*Напишите «презентацию для лифта» из 2 предложений. Сосредоточьтесь на **ценности** и **результате**.*
+
+### ⚡ Логика: шаг за шагом
+*Объясните поток как историю. Используйте жирный шрифт для ключевых действий. Не используйте технические названия узлов.*
+*   **Шаг 1:** [Триггер]
+*   **Шаг 2:** [Действие]
+*   **Шаг 3:** [Действие]
+*   **Шаг 4:** [Результат]
+
+### 🛠️ Ключевые моменты конфигурации
+*Проанализируйте JSON на наличие узлов, содержащих конкретные («жестко закодированные») данные или параметры, которые пользователю обязательно нужно будет проверить. Перечислите основные узлы, требующие внимания (кроме учетных данных).*
+*   **[Имя узла]:** Объясните, что проверить (например: «В узле 'Gmail' проверьте правильность получателя или измените его на свою почту»).
+*   **[Имя узла]:** (например: «В этом узле таблицы подтвердите, что ID таблицы соответствует вашему файлу»).
+*   **[Имя узла]:** (например: «Здесь находится 'System Prompt' ИИ. Отредактируйте этот текст, чтобы изменить личность или правила помощника»).
+
+### 💡 Реальный пример использования
+*Опишите конкретный сценарий, в котором это экономит время или деньги.*
+
+### ⚠️ Требования к настройке
+*Проанализируйте раздел \`credentials\` или требования к узлам (ключи API, аккаунты, столбцы).*
+
+### 🚀 Советы по настройке
+*Предложите, как пользователь может изменить его в соответствии со своими потребностями, способы обслуживания других типов бизнеса или типы интеграторов (WhatsApp, Telegram, CRM, ERP) и другие варианты улучшения рабочего процесса. Будьте дидактичны.*
+
+### 🔌 Интегрированные приложения и сервисы
+*Перечислите конкретные сервисы, обнаруженные в узлах, с помощью эмодзи.*`
+    };
+
+    // Enhanced Workflow App with Full Functionality
+    class WorkflowApp {
+      constructor() {
+        this.state = {
+          workflows: [],
+          currentPage: 1,
+          totalPages: 1,
+          totalCount: 0,
+          perPage: 20,
+          isLoading: false,
+          searchQuery: '',
+          filters: {
+            trigger: 'all',
+            complexity: 'all',
+            category: 'all',
+            activeOnly: false
+          },
+          categories: [],
+          categoryMap: new Map()
+        };
+
+        this.elements = {
+          searchInput: document.getElementById('searchInput'),
+          triggerFilter: document.getElementById('triggerFilter'),
+          complexityFilter: document.getElementById('complexityFilter'),
+          categoryFilter: document.getElementById('categoryFilter'),
+          activeOnlyFilter: document.getElementById('activeOnly'),
+          themeToggle: document.getElementById('themeToggle'),
+          resultsCount: document.getElementById('resultsCount'),
+          workflowGrid: document.getElementById('workflowGrid'),
+          loadMoreContainer: document.getElementById('loadMoreContainer'),
+          loadMoreBtn: document.getElementById('loadMoreBtn'),
+          loadingState: document.getElementById('loadingState'),
+          errorState: document.getElementById('errorState'),
+          noResultsState: document.getElementById('noResultsState'),
+          errorMessage: document.getElementById('errorMessage'),
+          retryBtn: document.getElementById('retryBtn'),
+          totalCount: document.getElementById('totalCount'),
+          activeCount: document.getElementById('activeCount'),
+          nodeCount: document.getElementById('nodeCount'),
+          integrationCount: document.getElementById('integrationCount'),
+          // Modal elements
+          workflowModal: document.getElementById('workflowModal'),
+          modalTitle: document.getElementById('modalTitle'),
+          modalClose: document.getElementById('modalClose'),
+          modalDescription: document.getElementById('modalDescription'),
+          modalStats: document.getElementById('modalStats'),
+          modalIntegrations: document.getElementById('modalIntegrations'),
+          downloadBtn: document.getElementById('downloadBtn'),
+          viewJsonBtn: document.getElementById('viewJsonBtn'),
+          viewDiagramBtn: document.getElementById('viewDiagramBtn'),
+          jsonSection: document.getElementById('jsonSection'),
+          jsonViewer: document.getElementById('jsonViewer'),
+          diagramSection: document.getElementById('diagramSection'),
+          diagramViewer: document.getElementById('diagramViewer'),
+          diagramContainer: document.getElementById('diagramContainer'),
+          copyJsonBtn: document.getElementById('copyJsonBtn'),
+          copyDiagramBtn: document.getElementById('copyDiagramBtn'),
+          zoomInBtn: document.getElementById('zoomInBtn'),
+          zoomOutBtn: document.getElementById('zoomOutBtn'),
+          zoomResetBtn: document.getElementById('zoomResetBtn'),
+          analyzeWorkflowBtn: document.getElementById('analyzeWorkflowBtn')
+        };
+
+        this.searchDebounceTimer = null;
+        this.currentWorkflow = null;
+        this.currentJsonData = null;
+        this.currentDiagramData = null;
+        this.diagramZoom = 1;
+        this.diagramSvg = null;
+        this.diagramPan = { x: 0, y: 0 };
+        this.isDragging = false;
+        this.lastMousePos = { x: 0, y: 0 };
+        this.promptType = 'default';
+        this.currentLanguage = 'English (EN)';
+        this.init();
+      }
+
+      async init() {
+        this.setupEventListeners();
+        this.setupTheme();
+        this.initMermaid();
+        this.setupAnalyzerEvents();
+        await this.loadInitialData();
+      }
+
+      setupAnalyzerEvents() {
+        // Language change listener
+        const languageSelect = document.getElementById('analyzerLanguage');
+        if (languageSelect) {
+            languageSelect.addEventListener('change', (e) => {
+                this.handleLanguageChange(e.target.value);
+            });
+            
+            // Set initial prompt
+            this.handleLanguageChange(languageSelect.value);
+        }
+      }
+
+      handlePromptTypeChange(type) {
+        this.promptType = type;
+        const promptArea = document.getElementById('promptArea');
+        const textarea = document.getElementById('customPrompt');
+        if (!promptArea || !textarea) return;
+
+        if (type === 'custom') {
+            // Show prompt area
+            promptArea.style.display = 'block';
+            textarea.removeAttribute('readonly');
+            textarea.style.opacity = '1';
+            textarea.style.cursor = 'text';
+            // Ensure content is set (if empty)
+            if (!textarea.value) {
+                const prompt = SYSTEM_PROMPTS[this.currentLanguage] || SYSTEM_PROMPTS['English (EN)'];
+                textarea.value = prompt;
+            }
+            // Small timeout to allow display change to render before focus
+            setTimeout(() => {
+                textarea.focus();
+                textarea.setSelectionRange(0, 0);
+                textarea.scrollTop = 0;
+            }, 50);
+        } else {
+            // Hide prompt area
+            promptArea.style.display = 'none';
+            // Reset to default prompt for current language just to be safe
+            const prompt = SYSTEM_PROMPTS[this.currentLanguage] || SYSTEM_PROMPTS['English (EN)'];
+            textarea.value = prompt;
+        }
+      }
+
+      downloadPrompt() {
+        const textarea = document.getElementById('customPrompt');
+        if (!textarea) return;
+
+        const content = textarea.value;
+        const blob = new Blob([content], { type: 'text/markdown' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        
+        const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19);
+        a.href = url;
+        a.download = `n8n-analyzer-prompt-${this.currentLanguage.split(' ')[0]}-${timestamp}.md`;
+        document.body.appendChild(a);
+        a.click();
+        
+        // Cleanup
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+      }
+
+      handleLanguageChange(languageName) {
+        this.currentLanguage = languageName;
+        
+        // Always update prompt when language changes, regardless of mode
+        const textarea = document.getElementById('customPrompt');
+        if (textarea) {
+            const prompt = SYSTEM_PROMPTS[languageName] || SYSTEM_PROMPTS['English (EN)'];
+            if (prompt) {
+                textarea.value = prompt;
+                textarea.setSelectionRange(0, 0);
+                textarea.scrollTop = 0;
+            }
+        }
+      }
+
+      initMermaid() {
+        // Initialize Mermaid with proper configuration
+        if (typeof mermaid !== 'undefined') {
+          mermaid.initialize({
+            startOnLoad: false,
+            theme: 'base',
+            themeVariables: {
+              primaryColor: '#3b82f6',
+              primaryTextColor: '#1e293b',
+              primaryBorderColor: '#2563eb',
+              lineColor: '#64748b',
+              secondaryColor: '#f1f5f9',
+              tertiaryColor: '#f8fafc'
+            }
+          });
+        }
+      }
+
+      setupEventListeners() {
+        // Search and filters
+        this.elements.searchInput.addEventListener('input', (e) => {
+          this.state.searchQuery = e.target.value;
+          this.debounceSearch();
+        });
+
+        this.elements.triggerFilter.addEventListener('change', (e) => {
+          this.state.filters.trigger = e.target.value;
+          this.state.currentPage = 1;
+          this.resetAndSearch();
+        });
+
+        this.elements.complexityFilter.addEventListener('change', (e) => {
+          this.state.filters.complexity = e.target.value;
+          this.state.currentPage = 1;
+          this.resetAndSearch();
+        });
+
+        this.elements.categoryFilter.addEventListener('change', (e) => {
+          const selectedCategory = e.target.value;
+          console.log(`Category filter changed to: ${selectedCategory}`);
+          console.log('Current category map size:', this.state.categoryMap.size);
+
+          this.state.filters.category = selectedCategory;
+          this.state.currentPage = 1;
+          this.resetAndSearch();
+        });
+
+        this.elements.activeOnlyFilter.addEventListener('change', (e) => {
+          this.state.filters.activeOnly = e.target.checked;
+          this.state.currentPage = 1;
+          this.resetAndSearch();
+        });
+
+        // Load more
+        this.elements.loadMoreBtn.addEventListener('click', () => {
+          this.loadMoreWorkflows();
+        });
+
+        // Retry
+        this.elements.retryBtn.addEventListener('click', () => {
+          this.loadInitialData();
+        });
+
+        // Theme toggle
+        this.elements.themeToggle.addEventListener('click', () => {
+          this.toggleTheme();
+        });
+
+        // Modal events
+        this.elements.modalClose.addEventListener('click', () => {
+          this.closeModal();
+        });
+
+        this.elements.workflowModal.addEventListener('click', (e) => {
+          if (e.target === this.elements.workflowModal) {
+            this.closeModal();
+          }
+        });
+
+        this.elements.viewJsonBtn.addEventListener('click', () => {
+          this.toggleJsonView();
+        });
+
+        this.elements.viewDiagramBtn.addEventListener('click', () => {
+          this.toggleDiagramView();
+        });
+
+        // Copy button events
+        this.elements.copyJsonBtn.addEventListener('click', () => {
+          this.copyToClipboard(this.currentJsonData, 'copyJsonBtn');
+        });
+
+        this.elements.copyDiagramBtn.addEventListener('click', () => {
+          this.copyToClipboard(this.currentDiagramData, 'copyDiagramBtn');
+        });
+
+        // Zoom control events
+        this.elements.zoomInBtn.addEventListener('click', () => {
+          this.zoomDiagram(1.2);
+        });
+
+        this.elements.zoomOutBtn.addEventListener('click', () => {
+          this.zoomDiagram(0.8);
+        });
+
+        this.elements.zoomResetBtn.addEventListener('click', () => {
+          this.resetDiagramZoom();
+        });
+
+        // AI Analyzer from Workflow Details
+        if (this.elements.analyzeWorkflowBtn) {
+            this.elements.analyzeWorkflowBtn.addEventListener('click', async () => {
+                if (!this.currentWorkflow) return;
+                
+                try {
+                    const btn = this.elements.analyzeWorkflowBtn;
+                    const originalText = btn.textContent;
+                    btn.textContent = 'Loading...';
+                    btn.disabled = true;
+                    btn.style.opacity = '0.7';
+
+                    // Fetch full workflow JSON
+                    const data = await this.apiCall(`/workflows/${this.currentWorkflow.filename}`);
+                    const jsonString = JSON.stringify(data.raw_json, null, 2);
+                    
+                    // Open Analyzer Modal with pre-filled content
+                    this.openAnalyzerModal(jsonString, this.currentWorkflow.name);
+                    
+                } catch (error) {
+                    console.error('Failed to load workflow JSON', error);
+                    alert('Failed to load workflow JSON: ' + error.message);
+                } finally {
+                    const btn = this.elements.analyzeWorkflowBtn;
+                    btn.textContent = '🧠 AI Analyzer';
+                    btn.disabled = false;
+                    btn.style.opacity = '1';
+                }
+            });
+        }
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+          if (e.key === 'Escape') {
+            this.closeModal();
+          }
+
+          // Zoom shortcuts when diagram is visible
+          if (!this.elements.diagramSection.classList.contains('hidden')) {
+            if (e.key === '+' || e.key === '=') {
+              e.preventDefault();
+              this.zoomDiagram(1.2);
+            } else if (e.key === '-') {
+              e.preventDefault();
+              this.zoomDiagram(0.8);
+            } else if (e.key === '0' && e.ctrlKey) {
+              e.preventDefault();
+              this.resetDiagramZoom();
+            }
+          }
+        });
+      }
+
+      setupTheme() {
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+        this.updateThemeToggle(savedTheme);
+      }
+
+      toggleTheme() {
+        const currentTheme = document.documentElement.getAttribute('data-theme');
+        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', newTheme);
+        localStorage.setItem('theme', newTheme);
+        this.updateThemeToggle(newTheme);
+      }
+
+      updateThemeToggle(theme) {
+        this.elements.themeToggle.textContent = theme === 'dark' ? '☀️' : '🌙';
+      }
+
+      debounceSearch() {
+        clearTimeout(this.searchDebounceTimer);
+        this.searchDebounceTimer = setTimeout(() => {
+          this.state.currentPage = 1;
+          this.resetAndSearch();
+        }, 300);
+      }
+
+      async apiCall(endpoint, options = {}) {
+        const response = await fetch(`/api${endpoint}`, {
+          headers: {
+            'Content-Type': 'application/json',
+            ...options.headers
+          },
+          ...options
+        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+
+        return response.json();
+      }
+
+      async loadInitialData() {
+        this.showState('loading');
+
+        try {
+          // Load categories first, then stats and workflows
+          console.log('Loading categories...');
+          await this.loadCategories();
+
+          console.log('Categories loaded, populating filter...');
+          this.populateCategoryFilter();
+
+          // Load stats and workflows in parallel
+          console.log('Loading stats and workflows...');
+          const [stats] = await Promise.all([
+            this.apiCall('/stats'),
+            this.loadWorkflows(true)
+          ]);
+
+          this.updateStatsDisplay(stats);
+          console.log('Initial data loading complete');
+        } catch (error) {
+          console.error('Error during initial data loading:', error);
+          this.showError('Failed to load data: ' + error.message);
+        }
+      }
+
+      async loadCategories() {
+        try {
+          console.log('Loading categories from API...');
+
+          // Load categories and mappings in parallel from API
+          const [categoriesResponse, mappingsResponse] = await Promise.all([
+            this.apiCall('/categories'),
+            this.apiCall('/category-mappings')
+          ]);
+
+          // Set categories from API
+          this.state.categories = categoriesResponse.categories || ['Uncategorized'];
+
+          // Build category map from API mappings
+          const categoryMap = new Map();
+          const mappings = mappingsResponse.mappings || {};
+
+          Object.entries(mappings).forEach(([filename, category]) => {
+            categoryMap.set(filename, category || 'Uncategorized');
+          });
+
+          this.state.categoryMap = categoryMap;
+
+          console.log(`Successfully loaded ${this.state.categories.length} categories from API:`, this.state.categories);
+          console.log(`Loaded ${categoryMap.size} category mappings from API`);
+
+          return { categories: this.state.categories, mappings: mappings };
+        } catch (error) {
+          console.error('Failed to load categories from API:', error);
+          // Set default categories if loading fails
+          this.state.categories = ['Uncategorized'];
+          this.state.categoryMap = new Map();
+          return { categories: this.state.categories, mappings: {} };
+        }
+      }
+
+      populateCategoryFilter() {
+        const select = this.elements.categoryFilter;
+
+        if (!select) {
+          console.error('Category filter element not found');
+          return;
+        }
+
+        console.log('Populating category filter with:', this.state.categories);
+
+        // Clear existing options except "All Categories"
+        while (select.children.length > 1) {
+          select.removeChild(select.lastChild);
+        }
+
+        if (this.state.categories.length === 0) {
+          console.warn('No categories available to populate filter');
+          return;
+        }
+
+        // Add categories in alphabetical order
+        this.state.categories.forEach(category => {
+          const option = document.createElement('option');
+          option.value = category;
+          option.textContent = category;
+          select.appendChild(option);
+          console.log(`Added category option: ${category}`);
+        });
+
+        console.log(`Category filter populated with ${select.options.length - 1} categories`);
+      }
+
+      async loadWorkflows(reset = false) {
+        if (reset) {
+          this.state.currentPage = 1;
+          this.state.workflows = [];
+        }
+
+        this.state.isLoading = true;
+
+        try {
+          // If category filtering is active, we need to load all workflows to filter properly
+          const needsAllWorkflows = this.state.filters.category !== 'all' && reset;
+
+          let allWorkflows = [];
+          let totalCount = 0;
+          let totalPages = 1;
+
+          if (needsAllWorkflows) {
+            // Load all workflows in batches for category filtering
+            console.log('Loading all workflows for category filtering...');
+            allWorkflows = await this.loadAllWorkflowsForCategoryFiltering();
+
+            // Apply client-side category filtering
+            console.log(`Filtering ${allWorkflows.length} workflows for category: ${this.state.filters.category}`);
+            console.log('Category map size:', this.state.categoryMap.size);
+
+            let matchCount = 0;
+            const filteredWorkflows = allWorkflows.filter(workflow => {
+              const workflowCategory = this.getWorkflowCategory(workflow.filename);
+              const matches = workflowCategory === this.state.filters.category;
+
+              // Debug: log first few matches/non-matches
+              if (matchCount < 5 || (!matches && matchCount < 3)) {
+                console.log(`${workflow.filename}: ${workflowCategory} ${matches ? '===' : '!=='} ${this.state.filters.category}`);
+              }
+
+              if (matches) matchCount++;
+
+              return matches;
+            });
+
+            console.log(`Filtered from ${allWorkflows.length} to ${filteredWorkflows.length} workflows`);
+            allWorkflows = filteredWorkflows;
+            totalCount = filteredWorkflows.length;
+            totalPages = 1; // All results loaded, no pagination needed
+          } else {
+            // Normal pagination
+            const params = new URLSearchParams({
+              q: this.state.searchQuery,
+              trigger: this.state.filters.trigger,
+              complexity: this.state.filters.complexity,
+              active_only: this.state.filters.activeOnly,
+              page: this.state.currentPage,
+              per_page: this.state.perPage
+            });
+
+            const response = await this.apiCall(`/workflows?${params}`);
+            allWorkflows = response.workflows;
+            totalCount = response.total;
+            totalPages = response.pages;
+          }
+
+          if (reset) {
+            this.state.workflows = allWorkflows;
+            this.state.totalCount = totalCount;
+            this.state.totalPages = totalPages;
+          } else {
+            this.state.workflows.push(...allWorkflows);
+          }
+
+          this.updateUI();
+
+        } catch (error) {
+          this.showError('Failed to load workflows: ' + error.message);
+        } finally {
+          this.state.isLoading = false;
+        }
+      }
+
+      async loadAllWorkflowsForCategoryFiltering() {
+        const allWorkflows = [];
+        let currentPage = 1;
+        const maxPerPage = 100; // API limit
+
+        while (true) {
+          const params = new URLSearchParams({
+            q: this.state.searchQuery,
+            trigger: this.state.filters.trigger,
+            complexity: this.state.filters.complexity,
+            active_only: this.state.filters.activeOnly,
+            page: currentPage,
+            per_page: maxPerPage
+          });
+
+          const response = await this.apiCall(`/workflows?${params}`);
+          allWorkflows.push(...response.workflows);
+
+          console.log(`Loaded page ${currentPage}/${response.pages} (${response.workflows.length} workflows)`);
+
+          if (currentPage >= response.pages) {
+            break;
+          }
+
+          currentPage++;
+        }
+
+        console.log(`Loaded total of ${allWorkflows.length} workflows for filtering`);
+        return allWorkflows;
+      }
+
+      getWorkflowCategory(filename) {
+        const category = this.state.categoryMap.get(filename);
+        const result = category && category.trim() ? category : 'Uncategorized';
+        return result;
+      }
+
+      async loadMoreWorkflows() {
+        if (this.state.currentPage >= this.state.totalPages) return;
+
+        this.state.currentPage++;
+        await this.loadWorkflows(false);
+      }
+
+      resetAndSearch() {
+        this.loadWorkflows(true);
+      }
+
+      updateUI() {
+        this.updateResultsCount();
+        this.renderWorkflows();
+        this.updateLoadMoreButton();
+
+        if (this.state.workflows.length === 0) {
+          this.showState('no-results');
+        } else {
+          this.showState('content');
+        }
+      }
+
+      updateStatsDisplay(stats) {
+        this.elements.totalCount.textContent = stats.total.toLocaleString();
+        this.elements.activeCount.textContent = stats.active.toLocaleString();
+        this.elements.nodeCount.textContent = stats.total_nodes.toLocaleString();
+        this.elements.integrationCount.textContent = stats.unique_integrations.toLocaleString();
+      }
+
+      updateResultsCount() {
+        const count = this.state.totalCount;
+        const query = this.state.searchQuery;
+        const category = this.state.filters.category;
+
+        let text = `${count.toLocaleString()} workflows`;
+
+        if (query && category !== 'all') {
+          text += ` found for "${query}" in "${category}"`;
+        } else if (query) {
+          text += ` found for "${query}"`;
+        } else if (category !== 'all') {
+          text += ` in "${category}"`;
+        }
+
+        this.elements.resultsCount.textContent = text;
+      }
+
+      renderWorkflows() {
+        const html = this.state.workflows.map(workflow => this.createWorkflowCard(workflow)).join('');
+        this.elements.workflowGrid.innerHTML = html;
+
+        // Add click handlers to cards
+        this.elements.workflowGrid.querySelectorAll('.workflow-card').forEach((card, index) => {
+          card.addEventListener('click', () => {
+            this.openWorkflowDetail(this.state.workflows[index]);
+          });
+        });
+      }
+
+      createWorkflowCard(workflow) {
+        const statusClass = workflow.active ? 'status-active' : 'status-inactive';
+        const complexityClass = `complexity-${workflow.complexity}`;
+        const category = this.getWorkflowCategory(workflow.filename);
+
+        const integrations = workflow.integrations.slice(0, 5).map(integration =>
+          `<span class="integration-tag">${this.escapeHtml(integration)}</span>`
+        ).join('');
+
+        const moreIntegrations = workflow.integrations.length > 5
+          ? `<span class="integration-tag">+${workflow.integrations.length - 5}</span>`
+          : '';
+
+        return `
+                    <div class="workflow-card" data-filename="${workflow.filename}">
+                        <div class="workflow-header">
+                            <div class="workflow-meta">
+                                <div class="status-dot ${statusClass}"></div>
+                                <div class="complexity-dot ${complexityClass}"></div>
+                                <span>${workflow.node_count} nodes</span>
+                                <span class="category-badge">${this.escapeHtml(category)}</span>
+                            </div>
+                            <span class="trigger-badge">${this.escapeHtml(workflow.trigger_type)}</span>
+                        </div>
+                        
+                        <h3 class="workflow-title">${this.escapeHtml(workflow.name)}</h3>
+                        <p class="workflow-description">${this.escapeHtml(workflow.description)}</p>
+                        
+                        ${workflow.integrations.length > 0 ? `
+                            <div class="workflow-integrations">
+                                <h4 class="integrations-title">Integrations (${workflow.integrations.length})</h4>
+                                <div class="integrations-list">
+                                    ${integrations}
+                                    ${moreIntegrations}
+                                </div>
+                            </div>
+                        ` : ''}
+                    </div>
+                `;
+      }
+
+      async openWorkflowDetail(workflow) {
+        this.currentWorkflow = workflow;
+        this.elements.modalTitle.textContent = workflow.name;
+        this.elements.modalDescription.textContent = workflow.description;
+
+        // Update stats
+        const category = this.getWorkflowCategory(workflow.filename);
+        this.elements.modalStats.innerHTML = `
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem;">
+                        <div><strong>Status:</strong> ${workflow.active ? 'Active' : 'Inactive'}</div>
+                        <div><strong>Trigger:</strong> ${workflow.trigger_type}</div>
+                        <div><strong>Complexity:</strong> ${workflow.complexity}</div>
+                        <div><strong>Nodes:</strong> ${workflow.node_count}</div>
+                        <div><strong>Category:</strong> ${this.escapeHtml(category)}</div>
+                    </div>
+                `;
+
+        // Update integrations
+        if (workflow.integrations.length > 0) {
+          this.elements.modalIntegrations.innerHTML = workflow.integrations
+            .map(integration => `<span class="integration-tag">${this.escapeHtml(integration)}</span>`)
+            .join(' ');
+        } else {
+          this.elements.modalIntegrations.textContent = 'No integrations found';
+        }
+
+        // Set download link
+        this.elements.downloadBtn.href = `/api/workflows/${workflow.filename}/download`;
+        this.elements.downloadBtn.download = workflow.filename;
+
+        // Reset view states
+        this.elements.jsonSection.classList.add('hidden');
+        this.elements.diagramSection.classList.add('hidden');
+
+        this.elements.workflowModal.classList.remove('hidden');
+      }
+
+      closeModal() {
+        this.elements.workflowModal.classList.add('hidden');
+        this.currentWorkflow = null;
+        this.currentJsonData = null;
+        this.currentDiagramData = null;
+        this.diagramSvg = null;
+        this.diagramZoom = 1;
+        this.diagramPan = { x: 0, y: 0 };
+        this.isDragging = false;
+
+        // Reset button states
+        this.elements.viewJsonBtn.textContent = '📄 View JSON';
+        this.elements.viewDiagramBtn.textContent = '📊 View Diagram';
+
+        // Reset copy button states
+        this.resetCopyButton('copyJsonBtn');
+        this.resetCopyButton('copyDiagramBtn');
+      }
+
+      async toggleJsonView() {
+        if (!this.currentWorkflow) return;
+
+        const isVisible = !this.elements.jsonSection.classList.contains('hidden');
+
+        if (isVisible) {
+          this.elements.jsonSection.classList.add('hidden');
+          this.elements.viewJsonBtn.textContent = '📄 View JSON';
+        } else {
+          try {
+            this.elements.jsonViewer.textContent = 'Loading...';
+            this.elements.jsonSection.classList.remove('hidden');
+            this.elements.viewJsonBtn.textContent = '📄 Hide JSON';
+
+            const data = await this.apiCall(`/workflows/${this.currentWorkflow.filename}`);
+            const jsonString = JSON.stringify(data.raw_json, null, 2);
+            this.currentJsonData = jsonString;
+            this.elements.jsonViewer.textContent = jsonString;
+          } catch (error) {
+            this.elements.jsonViewer.textContent = 'Error loading JSON: ' + error.message;
+            this.currentJsonData = null;
+          }
+        }
+      }
+
+      async toggleDiagramView() {
+        if (!this.currentWorkflow) return;
+
+        const isVisible = !this.elements.diagramSection.classList.contains('hidden');
+
+        if (isVisible) {
+          this.elements.diagramSection.classList.add('hidden');
+          this.elements.viewDiagramBtn.textContent = '📊 View Diagram';
+        } else {
+          try {
+            this.elements.diagramViewer.textContent = 'Loading diagram...';
+            this.elements.diagramSection.classList.remove('hidden');
+            this.elements.viewDiagramBtn.textContent = '📊 Hide Diagram';
+
+            const data = await this.apiCall(`/workflows/${this.currentWorkflow.filename}/diagram`);
+            this.currentDiagramData = data.diagram;
+
+            // Create a Mermaid diagram that will be rendered
+            this.elements.diagramViewer.innerHTML = `
+                            <pre class="mermaid">${data.diagram}</pre>
+                        `;
+
+            // Re-initialize Mermaid for the new diagram
+            if (typeof mermaid !== 'undefined') {
+              mermaid.init(undefined, this.elements.diagramViewer.querySelector('.mermaid'));
+
+              // Store reference to SVG and reset zoom
+              setTimeout(() => {
+                this.diagramSvg = this.elements.diagramViewer.querySelector('.mermaid svg');
+                this.resetDiagramZoom();
+                this.setupDiagramPanning();
+              }, 100);
+            }
+          } catch (error) {
+            this.elements.diagramViewer.textContent = 'Error loading diagram: ' + error.message;
+            this.currentDiagramData = null;
+          }
+        }
+      }
+
+      zoomDiagram(factor) {
+        if (!this.diagramSvg) return;
+
+        this.diagramZoom *= factor;
+        this.diagramZoom = Math.max(0.1, Math.min(10, this.diagramZoom)); // Limit zoom between 10% and 1000%
+
+        this.applyDiagramTransform();
+      }
+
+      resetDiagramZoom() {
+        this.diagramZoom = 1;
+        this.diagramPan = { x: 0, y: 0 };
+        this.applyDiagramTransform();
+      }
+
+      applyDiagramTransform() {
+        if (!this.diagramSvg) return;
+
+        const transform = `scale(${this.diagramZoom}) translate(${this.diagramPan.x}px, ${this.diagramPan.y}px)`;
+        this.diagramSvg.style.transform = transform;
+        this.diagramSvg.style.transformOrigin = 'center center';
+      }
+
+      setupDiagramPanning() {
+        if (!this.elements.diagramContainer) return;
+
+        // Mouse events
+        this.elements.diagramContainer.addEventListener('mousedown', (e) => {
+          if (e.button === 0) { // Left mouse button
+            this.startDragging(e.clientX, e.clientY);
+            e.preventDefault();
+          }
+        });
+
+        document.addEventListener('mousemove', (e) => {
+          if (this.isDragging) {
+            this.handleDragging(e.clientX, e.clientY);
+            e.preventDefault();
+          }
+        });
+
+        document.addEventListener('mouseup', () => {
+          this.stopDragging();
+        });
+
+        // Touch events for mobile
+        this.elements.diagramContainer.addEventListener('touchstart', (e) => {
+          if (e.touches.length === 1) {
+            const touch = e.touches[0];
+            this.startDragging(touch.clientX, touch.clientY);
+            e.preventDefault();
+          }
+        });
+
+        document.addEventListener('touchmove', (e) => {
+          if (this.isDragging && e.touches.length === 1) {
+            const touch = e.touches[0];
+            this.handleDragging(touch.clientX, touch.clientY);
+            e.preventDefault();
+          }
+        });
+
+        document.addEventListener('touchend', () => {
+          this.stopDragging();
+        });
+
+        // Prevent context menu on right click
+        this.elements.diagramContainer.addEventListener('contextmenu', (e) => {
+          e.preventDefault();
+        });
+
+        // Mouse wheel zoom
+        this.elements.diagramContainer.addEventListener('wheel', (e) => {
+          e.preventDefault();
+          const zoomFactor = e.deltaY > 0 ? 0.9 : 1.1;
+          this.zoomDiagram(zoomFactor);
+        });
+      }
+
+      startDragging(x, y) {
+        this.isDragging = true;
+        this.lastMousePos = { x, y };
+        this.elements.diagramContainer.classList.add('dragging');
+      }
+
+      handleDragging(x, y) {
+        if (!this.isDragging) return;
+
+        const deltaX = x - this.lastMousePos.x;
+        const deltaY = y - this.lastMousePos.y;
+
+        // Apply pan delta scaled by zoom level (inverse relationship)
+        this.diagramPan.x += deltaX / this.diagramZoom;
+        this.diagramPan.y += deltaY / this.diagramZoom;
+
+        this.lastMousePos = { x, y };
+        this.applyDiagramTransform();
+      }
+
+      stopDragging() {
+        this.isDragging = false;
+        this.elements.diagramContainer.classList.remove('dragging');
+      } updateLoadMoreButton() {
+        const hasMore = this.state.currentPage < this.state.totalPages;
+
+        if (hasMore && this.state.workflows.length > 0) {
+          this.elements.loadMoreContainer.classList.remove('hidden');
+        } else {
+          this.elements.loadMoreContainer.classList.add('hidden');
+        }
+      }
+
+      showState(state) {
+        // Hide all states
+        this.elements.loadingState.classList.add('hidden');
+        this.elements.errorState.classList.add('hidden');
+        this.elements.noResultsState.classList.add('hidden');
+        this.elements.workflowGrid.classList.add('hidden');
+
+        // Show the requested state
+        switch (state) {
+          case 'loading':
+            this.elements.loadingState.classList.remove('hidden');
+            break;
+          case 'error':
+            this.elements.errorState.classList.remove('hidden');
+            break;
+          case 'no-results':
+            this.elements.noResultsState.classList.remove('hidden');
+            break;
+          case 'content':
+            this.elements.workflowGrid.classList.remove('hidden');
+            break;
+        }
+      }
+
+      showError(message) {
+        this.elements.errorMessage.textContent = message;
+        this.showState('error');
+      }
+
+      escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+      }
+
+      async copyToClipboard(text, buttonId) {
+        if (!text) {
+          console.warn('No content to copy');
+          return;
+        }
+
+        try {
+          await navigator.clipboard.writeText(text);
+          this.showCopySuccess(buttonId);
+        } catch (error) {
+          // Fallback for older browsers
+          this.fallbackCopyToClipboard(text, buttonId);
+        }
+      }
+
+      fallbackCopyToClipboard(text, buttonId) {
+        const textArea = document.createElement('textarea');
+        textArea.value = text;
+        textArea.style.position = 'fixed';
+        textArea.style.left = '-999999px';
+        textArea.style.top = '-999999px';
+        document.body.appendChild(textArea);
+        textArea.focus();
+        textArea.select();
+
+        try {
+          document.execCommand('copy');
+          this.showCopySuccess(buttonId);
+        } catch (error) {
+          console.error('Failed to copy text: ', error);
+        } finally {
+          document.body.removeChild(textArea);
+        }
+      }
+
+      showCopySuccess(buttonId) {
+        const button = document.getElementById(buttonId);
+        if (!button) return;
+
+        const originalText = button.innerHTML;
+        button.innerHTML = '✅ Copied!';
+        button.classList.add('copied');
+
+        setTimeout(() => {
+          button.innerHTML = originalText;
+          button.classList.remove('copied');
+        }, 2000);
+      }
+
+      resetCopyButton(buttonId) {
+        const button = document.getElementById(buttonId);
+        if (!button) return;
+
+        button.innerHTML = '📋 Copy';
+        button.classList.remove('copied');
+      }
+
+      // AI Analyzer Methods
+      async checkAIProviders() {
+        try {
+          console.log('Checking AI providers...');
+          const response = await fetch('/ai/providers');
+          if (!response.ok) {
+              console.error('Failed to fetch providers:', response.status);
+              return;
+          }
+          
+          const data = await response.json();
+          const providers = data.providers;
+          const configFile = data.config_file;
+
+          // Set default language if available
+          if (data.default_language) {
+             this.defaultLanguage = data.default_language;
+          }
+          
+          const buttons = {
+            'openai': 'btn-openai',
+            'deepseek': 'btn-deepseek',
+            'claude': 'btn-claude',
+            'grok': 'btn-grok',
+            'gemini': 'btn-gemini'
+          };
+          
+          for (const [provider, btnId] of Object.entries(buttons)) {
+            const btn = document.getElementById(btnId);
+            if (btn) {
+              if (providers[provider]) {
+                btn.disabled = false;
+                btn.title = "";
+                btn.style.opacity = "1";
+                btn.style.cursor = "pointer";
+                // Remove wrapper if exists to clean up
+                if (btn.parentNode.classList.contains('disabled-tooltip-wrapper')) {
+                    const wrapper = btn.parentNode;
+                    wrapper.parentNode.insertBefore(btn, wrapper);
+                    wrapper.remove();
+                }
+              } else {
+                btn.disabled = true;
+                btn.title = `* Please configure the API key in the ${configFile} file to enable AI analysis`;
+                btn.style.opacity = "0.5";
+                btn.style.cursor = "not-allowed";
+                
+                // Wrap in span for tooltip if not already wrapped
+                // (Disabled elements don't fire mouse events in some browsers, so we need a wrapper)
+                if (!btn.parentNode.classList.contains('disabled-tooltip-wrapper')) {
+                    const wrapper = document.createElement('div');
+                    wrapper.className = 'disabled-tooltip-wrapper';
+                    wrapper.title = btn.title; // Move title to wrapper
+                    btn.parentNode.insertBefore(wrapper, btn);
+                    wrapper.appendChild(btn);
+                } else {
+                    btn.parentNode.title = btn.title;
+                }
+              }
+            }
+          }
+        } catch (e) {
+          console.error("Failed to check AI providers", e);
+        }
+      }
+
+      async openAnalyzerModal(prefilledJson = null, sourceName = null) {
+        const modal = document.getElementById('analyzerModal');
+        if (modal) {
+          modal.classList.remove('hidden');
+          
+          // Check providers status and get default language
+          // We wait for this to ensure defaults are loaded before resetting/setting state
+          await this.checkAIProviders();
+          
+          // Populate language dropdown if empty - DO THIS BEFORE RESET
+          const languageSelect = document.getElementById('analyzerLanguage');
+          if (languageSelect && languageSelect.options.length === 0) {
+              const defaultLang = this.defaultLanguage || 'English (EN)';
+              SUPPORTED_LANGUAGES.forEach(lang => {
+                  const option = document.createElement('option');
+                  option.value = lang.name;
+                  option.text = lang.name;
+                  // Select based on default language
+                  if (lang.name === defaultLang) {
+                      option.selected = true;
+                  } else if (!this.defaultLanguage && lang.code === 'en') {
+                      option.selected = true;
+                  }
+                  languageSelect.appendChild(option);
+              });
+          }
+          
+          // Reset modal state first to ensure clean slate
+          this.resetAnalyzerModalState();
+
+          // Handle pre-filled content
+          if (prefilledJson) {
+              const jsonInput = document.getElementById('analyzerJson');
+              const fileChosenText = document.getElementById('fileChosenText');
+              const pasteLabel = document.getElementById('analyzerPasteLabel');
+              const fileBtn = document.getElementById('analyzerFileBtn');
+              
+              if (jsonInput) {
+                  jsonInput.value = prefilledJson;
+                  jsonInput.classList.remove('collapsed');
+                  // Trigger input event to resize if needed
+              }
+              
+              if (fileChosenText && sourceName) {
+                  fileChosenText.textContent = `Workflow: ${sourceName}`;
+                  fileChosenText.title = sourceName;
+                  // Add a visual indicator that it's a workflow
+                  fileChosenText.style.fontWeight = '500';
+                  fileChosenText.style.color = 'var(--primary)';
+              }
+
+              // Update button text to indicate change/swap capability since file is preloaded
+              if (fileBtn) {
+                  fileBtn.textContent = 'Change file';
+              }
+          }
+          
+          // Setup file input listener if not already set
+          const fileInput = document.getElementById('analyzerFile');
+          const fileChosenText = document.getElementById('fileChosenText');
+          
+          if (fileInput && !fileInput.dataset.listenerAttached) {
+            fileInput.addEventListener('change', (e) => {
+              const file = e.target.files[0];
+              const fileBtn = document.getElementById('analyzerFileBtn');
+              
+              if (file) {
+                // Update text and tooltip
+                if (fileChosenText) {
+                    fileChosenText.textContent = file.name;
+                    fileChosenText.title = file.name;
+                }
+                
+                // Update button text
+                if (fileBtn) {
+                    fileBtn.textContent = 'Change file';
+                }
+
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                  document.getElementById('analyzerJson').value = e.target.result;
+                };
+                reader.readAsText(file);
+              } else {
+                 // Reset text
+                 if (fileChosenText) {
+                    fileChosenText.textContent = 'No file chosen';
+                    fileChosenText.title = 'No file chosen';
+                 }
+                 // Reset button text
+                 if (fileBtn) {
+                    fileBtn.textContent = 'Choose JSON Workflow File';
+                 }
+              }
+            });
+            fileInput.dataset.listenerAttached = 'true';
+          }
+        }
+      }
+
+      resetAnalyzerModalState() {
+        const jsonInput = document.getElementById('analyzerJson');
+        const fileInput = document.getElementById('analyzerFile');
+        const fileChosenText = document.getElementById('fileChosenText');
+        const pasteLabel = document.getElementById('analyzerPasteLabel');
+        const languageSelect = document.getElementById('analyzerLanguage');
+        const fileBtn = document.getElementById('analyzerFileBtn');
+        const promptTypeDefault = document.querySelector('input[name="promptType"][value="default"]');
+        
+        // Reset Language to Default
+        if (languageSelect) {
+             // Use default language from config if available, otherwise English
+             let targetLang = this.defaultLanguage || 'English (EN)';
+             
+             // Check if target language exists in options
+             let optionExists = false;
+             for (let i = 0; i < languageSelect.options.length; i++) {
+                 if (languageSelect.options[i].value === targetLang) {
+                     optionExists = true;
+                     break;
+                 }
+             }
+             
+             // Fallback to English if default language not found
+             if (!optionExists) {
+                 console.warn(`Default language "${targetLang}" not found in options. Falling back to English.`);
+                 targetLang = 'English (EN)';
+             }
+             
+             languageSelect.value = targetLang;
+             this.handleLanguageChange(targetLang);
+        }
+        
+        // Reset Prompt Type to Default
+        if (promptTypeDefault) {
+            promptTypeDefault.checked = true;
+            this.handlePromptTypeChange('default');
+        }
+        
+        // Reset JSON input and expand if collapsed
+        if (jsonInput) {
+          jsonInput.value = '';
+          jsonInput.classList.remove('collapsed');
+          jsonInput.style.height = '';
+          // Force reset of internal value to ensure no ghost data
+          jsonInput.defaultValue = '';
+        }
+        
+        // Expand label if collapsed
+        if (pasteLabel) pasteLabel.classList.remove('collapsed');
+        
+        // Reset file input to allow re-uploading same file
+        if (fileInput) {
+           fileInput.value = '';
+           fileInput.type = ''; // Briefly change type to ensure full reset in some browsers
+           fileInput.type = 'file';
+        }
+
+        // Reset button text
+        if (fileBtn) {
+           fileBtn.textContent = 'Choose JSON Workflow File';
+        }
+        
+        if (fileChosenText) {
+           fileChosenText.textContent = 'No file chosen';
+           fileChosenText.title = 'No file chosen';
+           // Reset styles added by workflow loader
+           fileChosenText.style.fontWeight = '';
+           fileChosenText.style.color = '';
+        }
+        
+        // Clear Results & Reset UI State
+        const resultContainer = document.getElementById('analysisResult');
+        const resultContent = document.getElementById('analysisContent');
+        const loadingState = document.getElementById('analysisLoading');
+        
+        if (resultContent) resultContent.innerHTML = '';
+        if (resultContainer) resultContainer.classList.add('hidden');
+        if (loadingState) loadingState.classList.add('hidden');
+      }
+
+      closeAnalyzerModal() {
+        /**
+         * SYSTEM REQUIREMENT: Modal Reset Protocol
+         * This function must ensure complete state sanitization when the modal is closed.
+         * 
+         * Requirements:
+         * 1. Clear all input fields (text, file, JSON)
+         * 2. Remove any previous analysis results
+         * 3. Reset UI state (collapsed fields, loading indicators)
+         * 4. Ensure no data leakage between sessions
+         */
+        const modal = document.getElementById('analyzerModal');
+        if (modal) {
+          modal.classList.add('hidden');
+          this.resetAnalyzerModalState();
+        }
+      }
+
+      async downloadAnalysis() {
+        const content = this.currentAnalysisMarkdown || document.getElementById('analysisContent').innerText;
+        if (!content) {
+          alert('No analysis content to download');
+          return;
+        }
+        
+        try {
+          const blob = new Blob([content], { type: 'text/markdown' });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          const date = new Date().toISOString().split('T')[0];
+          
+          a.href = url;
+          a.download = `AI_Analysis_${date}.md`;
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          URL.revokeObjectURL(url);
+        } catch (error) {
+          console.error('Download failed:', error);
+          alert('Failed to download analysis');
+        }
+      }
+
+      async copyAnalysis() {
+        const contentElement = document.getElementById('analysisContent');
+        const markdown = this.currentAnalysisMarkdown || contentElement.innerText;
+        const html = contentElement.innerHTML;
+        const btnText = document.getElementById('copyAnalysisText');
+        
+        try {
+          if (typeof ClipboardItem !== 'undefined') {
+            const textBlob = new Blob([markdown], { type: 'text/plain' });
+            const htmlBlob = new Blob([html], { type: 'text/html' });
+            const data = [new ClipboardItem({ 
+                'text/plain': textBlob, 
+                'text/html': htmlBlob 
+            })];
+            await navigator.clipboard.write(data);
+          } else {
+            await navigator.clipboard.writeText(markdown);
+          }
+
+          if (btnText) {
+            const originalText = btnText.textContent;
+            btnText.textContent = '✅ Copied!';
+            setTimeout(() => {
+              btnText.textContent = originalText;
+            }, 2000);
+          }
+        } catch (err) {
+          console.error('Failed to copy:', err);
+          alert('Failed to copy to clipboard');
+        }
+      }
+
+      async analyzeWorkflow(provider) {
+        const jsonContent = document.getElementById('analyzerJson').value;
+        const languageSelect = document.getElementById('analyzerLanguage');
+        const language = languageSelect ? languageSelect.value : 'English (EN)';
+        const customPromptInput = document.getElementById('customPrompt');
+        const customPrompt = customPromptInput ? customPromptInput.value : null;
+        
+        // Correct IDs based on HTML
+        const resultContainer = document.getElementById('analysisResult');
+        const resultContent = document.getElementById('analysisContent');
+        const loadingState = document.getElementById('analysisLoading');
+
+        if (!jsonContent) {
+          alert('Please enter the workflow JSON or upload a file');
+          return;
+        }
+
+        // Show loading and collapse inputs
+        if (loadingState) loadingState.classList.remove('hidden');
+        if (resultContainer) resultContainer.classList.add('hidden');
+
+        // Collapse inputs for better UI
+        const jsonInput = document.getElementById('analyzerJson');
+        const pasteLabel = document.getElementById('analyzerPasteLabel');
+        if (jsonInput) jsonInput.classList.add('collapsed');
+        if (pasteLabel) pasteLabel.classList.add('collapsed');
+
+        try {
+          const response = await fetch('/ai/analyze', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              provider,
+              workflow_details: 'No details provided',
+              json_content: jsonContent,
+              language,
+              custom_prompt: customPrompt
+            })
+          });
+
+          if (!response.ok) {
+            let errorDetail = 'Analysis failed';
+            try {
+              const error = await response.json();
+              errorDetail = error.detail;
+            } catch (e) {
+              // If response is not JSON
+              errorDetail = response.statusText;
+            }
+            
+            // Handle if detail is an object (e.g. validation error)
+            if (typeof errorDetail === 'object') {
+                errorDetail = JSON.stringify(errorDetail, null, 2);
+            }
+            
+            throw new Error(errorDetail || 'Analysis failed');
+          }
+
+          const data = await response.json();
+          
+          // Store raw markdown for download/copy
+          this.currentAnalysisMarkdown = data.markdown_result;
+          
+          // Render Markdown
+          if (resultContent) {
+             if (typeof marked !== 'undefined') {
+                resultContent.innerHTML = marked.parse(data.markdown_result);
+             } else {
+                resultContent.textContent = data.markdown_result; // Fallback
+             }
+          }
+          
+          // Show result
+          if (loadingState) loadingState.classList.add('hidden');
+          if (resultContainer) resultContainer.classList.remove('hidden');
+
+        } catch (error) {
+          console.error('Workflow analysis error:', error);
+          let errorMessage = error.message;
+          
+          // Double check if message is still an object
+          if (typeof errorMessage === 'object') {
+            try {
+              errorMessage = JSON.stringify(errorMessage, null, 2);
+            } catch (e) {
+              errorMessage = 'Unknown error object';
+            }
+          }
+          
+          // Friendly error mapping
+          if (errorMessage.includes('API Key not configured')) {
+             errorMessage = `⚠️ The API Key for ${provider} is not configured.\n\nPlease check the server configuration file (.env).`;
+          } else if (errorMessage.includes('literal_error') && errorMessage.includes('openai') && errorMessage.includes('deepseek')) {
+             // Handle specific Pydantic validation error for provider enum
+             errorMessage = `⚠️ The provider '${provider}' is not supported by the server version currently running.\n\nPlease restart the server to apply recent updates.`;
+          } else if (errorMessage.startsWith('[') && errorMessage.includes('"loc":') && errorMessage.includes('"msg":')) {
+             // Generic Pydantic error cleanup
+             try {
+                const errorObjs = JSON.parse(errorMessage);
+                if (Array.isArray(errorObjs)) {
+                    const messages = errorObjs.map(e => `• ${e.loc.join('.')}: ${e.msg}`).join('\n');
+                    errorMessage = `⚠️ Validation Error:\n${messages}`;
+                }
+             } catch (e) {
+                // Keep original if parsing fails
+             }
+          }
+          
+          alert(errorMessage);
+          if (loadingState) loadingState.classList.add('hidden');
+        }
+      }
+    }
+
+    // Initialize the app
+    document.addEventListener('DOMContentLoaded', () => {
+      window.workflowApp = new WorkflowApp();
+      
+      // Proactively check providers on load
+      setTimeout(() => {
+          if (window.workflowApp && window.workflowApp.checkAIProviders) {
+              window.workflowApp.checkAIProviders();
+          }
+      }, 500);
+    });
+  </script>
+</body>
+
+</html>

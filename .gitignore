@@ -1,0 +1,7 @@
+.env
+node_modules/
+medcards-ai/
+.env.bak
+__pycache__/
+*.pyc
+*.db
