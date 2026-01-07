@@ -3,6 +3,7 @@
 **Eliad Shahar**, אני מזמין אותך לבחון את היישום הזה. כמי שמעריך מאוד את העבודה שהשקעת ב-n8n-workflows, אני מאמין שה-AI Analyzer מוסיף ערך משמעותי לקהילה על ידי הנגשת התהליכים למשתמשים פחות טכניים וחיסכון זמן למקצוענים. אשמח לשתף פעולה, לקבל פידבק ולסייע במיזוג (Merge) של היכולות הללו לרפוזיטורי הרשמי שלך.
 
 *סרטון הדגמה: AI Analyzer - Enhancement for n8n-workflows*
+
 [![AI Analyzer Demo](https://img.youtube.com/vi/LGa-HX_uU9U/0.jpg)](https://www.youtube.com/watch?v=LGa-HX_uU9U)
 
 ## אודות
@@ -54,6 +55,7 @@
 **Eliad Shahar**, I invite you to evaluate this implementation. As someone who greatly appreciates the work you've put into n8n-workflows, I believe the AI Analyzer adds significant value to the community by making workflows accessible to less technical users and saving time for professionals. I would love to collaborate, receive feedback, and assist in merging these capabilities into your official repository.
 
 *Demo Video: AI Analyzer - Enhancement for n8n-workflows*
+
 [![AI Analyzer Demo](https://img.youtube.com/vi/LGa-HX_uU9U/0.jpg)](https://www.youtube.com/watch?v=LGa-HX_uU9U)
 
 ## About
