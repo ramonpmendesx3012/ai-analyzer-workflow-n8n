@@ -2,9 +2,8 @@
 
 **Eliad Shahar**, אני מזמין אותך לבחון את היישום הזה. כמי שמעריך מאוד את העבודה שהשקעת ב-n8n-workflows, אני מאמין שה-AI Analyzer מוסיף ערך משמעותי לקהילה על ידי הנגשת התהליכים למשתמשים פחות טכניים וחיסכון זמן למקצוענים. אשמח לשתף פעולה, לקבל פידבק ולסייע במיזוג (Merge) של היכולות הללו לרפוזיטורי הרשמי שלך.
 
-[![AI Analyzer Demo](https://img.youtube.com/vi/LGa-HX_uU9U/0.jpg)](https://www.youtube.com/watch?v=LGa-HX_uU9U)
-
 *סרטון הדגמה: AI Analyzer - Enhancement for n8n-workflows*
+[![AI Analyzer Demo](https://img.youtube.com/vi/LGa-HX_uU9U/0.jpg)](https://www.youtube.com/watch?v=LGa-HX_uU9U)
 
 ## אודות
 פרויקט זה מציג את **AI Analyzer**, תוסף (Add-on) משמעותי לפרויקט המקורי והמצוין [n8n-workflows](https://github.com/Zie619/n8n-workflows).
@@ -54,9 +53,8 @@
 
 **Eliad Shahar**, I invite you to evaluate this implementation. As someone who greatly appreciates the work you've put into n8n-workflows, I believe the AI Analyzer adds significant value to the community by making workflows accessible to less technical users and saving time for professionals. I would love to collaborate, receive feedback, and assist in merging these capabilities into your official repository.
 
-[![AI Analyzer Demo](https://img.youtube.com/vi/LGa-HX_uU9U/0.jpg)](https://www.youtube.com/watch?v=LGa-HX_uU9U)
-
 *Demo Video: AI Analyzer - Enhancement for n8n-workflows*
+[![AI Analyzer Demo](https://img.youtube.com/vi/LGa-HX_uU9U/0.jpg)](https://www.youtube.com/watch?v=LGa-HX_uU9U)
 
 ## About
 This project introduces **AI Analyzer**, a significant add-on to the excellent original project [n8n-workflows](https://github.com/Zie619/n8n-workflows).
