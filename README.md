@@ -38,7 +38,7 @@
 ---
 
 ## צד טכני והטמעה
-*   **מבנה הקוד:** השינויים מרוכזים בעיקר בקובץ `static/index.html` ובקובצי ה-JavaScript הנלווים, שם מוגדרת הלוגיקה של `WorkflowApp` והאינטראקציה עם ה-Prompts.
+*   **מבנה הקוד:** השינויים מרוכזים בעיקר בקובץ `static/index.html` ובקובצי ה-JavaScript הנלווים, שם מוגדרת הלוגיקה של `WorkflowApp` והאינטראקציה עם ה-Prompts. בנוסף, נוספו קבצים חדשים: `ai_analyzer.py` המכיל את הלוגיקה לניתוח ה-JSON, ו-`system_prompts.py` המרכז את הנחיות המערכת לכל השפות. כמו כן, יש להשתמש בקובץ `.env.example` כתבנית להגדרת משתני סביבה.
 *   **תאימות:** הפיתוח תוכנן כך שיהיה תואם באופן מלא לפרויקט המקורי. הוא אינו דורש שינויים בבסיס הנתונים או בשרת ה-Backend (Python/FastAPI) הקיימים.
 *   **בדיקה:**
     1.  הפעל את הפרויקט (`python run.py`).
@@ -89,7 +89,7 @@ The analysis produced by the AI Analyzer comprehensively covers the following po
 ---
 
 ## Technical Section & Implementation
-*   **Code Structure:** Changes are primarily concentrated in `static/index.html` and associated JavaScript files, where the `WorkflowApp` logic and Prompt interaction are defined.
+*   **Code Structure:** Changes are primarily concentrated in `static/index.html` and associated JavaScript files, where the `WorkflowApp` logic and Prompt interaction are defined. Additionally, new files have been added: `ai_analyzer.py` containing the JSON analysis logic, and `system_prompts.py` which centralizes system instructions for all languages. Also, `.env.example` should be used as a template for environment variable configuration.
 *   **Compatibility:** The development was designed to be fully compatible with the original project. It requires no changes to the existing database or Backend server (Python/FastAPI).
 *   **Testing:**
     1.  Run the project (`python run.py`).
