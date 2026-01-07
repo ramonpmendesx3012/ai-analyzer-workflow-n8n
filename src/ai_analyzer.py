@@ -18,12 +18,12 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # ==========================================
-# DEFAULT LANGUAGE CONFIGURATION "Output Language" FOR THE AI Workflow Analyzer SCREEN
-# Uncomment the language you want to use as the default
+# DEFAULT LANGUAGE CONFIGURATION "Output Language"
 # ==========================================
+# Options available for reference (copy exact string to your .env or Railway var):
 # DEFAULT_LANGUAGE = "English (EN)"
 # DEFAULT_LANGUAGE = "Português (PT-BR)"
-DEFAULT_LANGUAGE = "Hebrew (HE)"
+# DEFAULT_LANGUAGE = "Hebrew (HE)"
 # DEFAULT_LANGUAGE = "Español (ES)"
 # DEFAULT_LANGUAGE = "French (FR)"
 # DEFAULT_LANGUAGE = "German (DE)"
@@ -32,6 +32,9 @@ DEFAULT_LANGUAGE = "Hebrew (HE)"
 # DEFAULT_LANGUAGE = "Japanese (JA)"
 # DEFAULT_LANGUAGE = "Hindi (HI)"
 # DEFAULT_LANGUAGE = "Russian (RU)"
+
+# Priority: 1. Environment Variable 2. Default to English
+DEFAULT_LANGUAGE = os.getenv("DEFAULT_LANGUAGE", "English (EN)")
 
 from src.system_prompts import (
     PROMPT_EN, PROMPT_PT_BR, PROMPT_HE, PROMPT_ES, PROMPT_FR, PROMPT_DE,
